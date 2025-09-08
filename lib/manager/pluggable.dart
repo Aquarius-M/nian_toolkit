@@ -1,0 +1,16 @@
+part of '../nian_toolkit.dart';
+
+abstract class Pluggable {
+  String get name;
+  int get index;
+  void onTrigger();
+  Widget? buildWidget(BuildContext? context);
+  ImageProvider get iconImageProvider;
+}
+
+typedef StreamFilter = bool Function(dynamic);
+
+abstract class PluggableWithStream extends Pluggable {
+  Stream get stream;
+  StreamFilter get streamFilter;
+}
