@@ -12,18 +12,18 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
 
-  device_info_plus:
-  package_info_plus:
-  network_info_plus:
-  dio:
-  path:
-  path_provider:
+  device_info_plus: ^12.2.0
+  package_info_plus: ^9.0.0
+  network_info_plus: ^7.0.0
+  dio: ^5.9.0
+  path: ^1.9.1
+  path_provider: ^2.1.5
 
   image: ^4.5.4
 
   sqflite: ^2.4.1
   sqlite_viewer2: ^2.0.0
-  shared_preferences:
+  shared_preferences: ^2.5.3
   reorderables: ^0.6.0
 dev_dependencies:
   flutter_test:
