@@ -67,6 +67,6 @@ part 'page/widget_info_plug/widget_info_pluggable.dart';
 part 'page/dio_plug/dio_pluggable.dart';
 part 'page/dio_plug/dio_inspector_interceptor.dart';
 
-part 'utils/common_utils.dart';
+part 'utils/kit_utils.dart';
 part 'utils/menu_order_storage.dart';
 part 'manager/proxy_manager.dart';

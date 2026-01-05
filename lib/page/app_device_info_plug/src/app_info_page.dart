@@ -34,7 +34,7 @@ class _AppInfoPageState extends State<AppInfoPage> {
     final info = NetworkInfo();
     wifiIP = await info.getWifiIP();
 
-    final platformInfo = await KitDeviceUtils.getPackageInfo();
+    final platformInfo = await KitUtils.getPackageInfo();
 
     appName = platformInfo.appName;
     packageName = platformInfo.packageName;
@@ -42,8 +42,8 @@ class _AppInfoPageState extends State<AppInfoPage> {
     buildNumber = platformInfo.buildNumber;
     buildSignature = platformInfo.buildSignature;
     installerStore = platformInfo.installerStore;
-    getCachePath = await KitDeviceUtils.getCachePath();
-    getPhoneDocumentsPath = await KitDeviceUtils.getPhoneDocumentsPath();
+    getCachePath = await KitUtils.getCachePath();
+    getPhoneDocumentsPath = await KitUtils.getPhoneDocumentsPath();
     setState(() {});
   }
 
@@ -52,21 +52,33 @@ class _AppInfoPageState extends State<AppInfoPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          PannelWidget('IP地址', text: wifiIP, onTap: () {
-            KitStringUtils.copy(wifiIP, toastText: '已复制IP地址');
-          }),
+          PannelWidget(
+            'IP地址',
+            text: wifiIP,
+            onTap: () {
+              KitStringUtils.copy(wifiIP, toastText: '已复制IP地址');
+            },
+          ),
           PannelWidget('app名称', text: '$appName'),
           PannelWidget('版本号', text: '$packageVersion'),
           PannelWidget('构建版本号', text: '$buildNumber'),
           PannelWidget('包名', text: '$packageName'),
           PannelWidget('签名', text: '$buildSignature'),
           PannelWidget('安装', text: '$installerStore'),
-          PannelWidget('缓存路径', text: '$getCachePath', onTap: () {
-            KitStringUtils.copy(getCachePath, toastText: '已复制缓存路径');
-          }),
-          PannelWidget('文件路径', text: '$getPhoneDocumentsPath', onTap: () {
-            KitStringUtils.copy(getPhoneDocumentsPath, toastText: '已复制文件路径');
-          }),
+          PannelWidget(
+            '缓存路径',
+            text: '$getCachePath',
+            onTap: () {
+              KitStringUtils.copy(getCachePath, toastText: '已复制缓存路径');
+            },
+          ),
+          PannelWidget(
+            '文件路径',
+            text: '$getPhoneDocumentsPath',
+            onTap: () {
+              KitStringUtils.copy(getPhoneDocumentsPath, toastText: '已复制文件路径');
+            },
+          ),
         ],
       ),
     );

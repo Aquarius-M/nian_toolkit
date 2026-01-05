@@ -1,7 +1,21 @@
 // ignore_for_file: constant_identifier_names
 part of '../nian_toolkit.dart';
 
-class KitDeviceUtils {
+class KitUtils {
+  /// 设备宽高比
+  static final devicePixelRatio =
+      PlatformDispatcher.instance.views.first.devicePixelRatio;
+
+  /// 设备宽度
+  static final deviceWidth =
+      PlatformDispatcher.instance.views.first.physicalSize.width /
+      devicePixelRatio;
+
+  /// 设备高度
+  static final deviceHeight =
+      PlatformDispatcher.instance.views.first.physicalSize.height /
+      devicePixelRatio;
+
   /// 获取包信息
   static Future<PackageInfo> getPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

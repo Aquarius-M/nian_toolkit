@@ -11,7 +11,11 @@ class ToolKitConstants {
   ); // maxXOffset, maxYOffset
 
   // 菜单相关常量
-  static const Size menuSize = Size(360.0, 170.0);
+
+  static Size menuSize = Size(
+    KitUtils.deviceWidth * 0.8,
+    KitUtils.deviceHeight * 0.2,
+  );
   static const EdgeInsets menuPadding = EdgeInsets.all(16.0);
   static const double menuSpacing = 8.0;
 
