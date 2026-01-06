@@ -10,6 +10,7 @@ class ToolKitMenuWidget extends StatefulWidget {
   final Size buttonSize;
   final BuildContext parentContext;
   final Function(List<Pluggable?>)? onReorder; // 新增排序回调
+  final VoidCallback? onClearCache; // 清除缓存回调
 
   const ToolKitMenuWidget({
     super.key,
@@ -21,6 +22,7 @@ class ToolKitMenuWidget extends StatefulWidget {
     required this.buttonSize,
     required this.parentContext,
     this.onReorder,
+    this.onClearCache,
   });
 
   @override
@@ -183,13 +185,41 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                           // 调用外部回调
                           widget.onReorder?.call(_dataList);
                         },
-                        children: _dataList.asMap().entries.map((entry) {
-                          final data = entry.value;
-                          if (data == null) {
-                            return const SizedBox(key: ValueKey('empty'));
-                          }
-                          return SizedBox(
-                            key: ValueKey(data.name), // 为每个item添加唯一key
+                        children: [
+                          ..._dataList.asMap().entries.map((entry) {
+                            final data = entry.value;
+                            if (data == null) {
+                              return const SizedBox(key: ValueKey('empty'));
+                            }
+                            return SizedBox(
+                              key: ValueKey(data.name), // 为每个item添加唯一key
+                              width: ToolKitConstants.menuItemConfig.width,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FloatingActionButton.small(
+                                    elevation: 2,
+                                    backgroundColor: Colors.white,
+                                    onPressed: () => widget.onMenuItemTap(data),
+                                    child: Image(
+                                      image: data.iconImageProvider,
+                                      width: ToolKitConstants
+                                          .menuItemConfig
+                                          .height,
+                                      height: ToolKitConstants
+                                          .menuItemConfig
+                                          .height,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(data.name),
+                                ],
+                              ),
+                            );
+                          }),
+                          SizedBox(
+                            key: ValueKey("delete_cache"), // 为每个item添加唯一key
                             width: ToolKitConstants.menuItemConfig.width,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -198,9 +228,16 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                                 FloatingActionButton.small(
                                   elevation: 2,
                                   backgroundColor: Colors.white,
-                                  onPressed: () => widget.onMenuItemTap(data),
+                                  onPressed: () async {
+                                    // 清除代理设置
+                                    await ProxyManager.instance.clearProxy();
+                                    // 清除菜单排序
+                                    await MenuOrderStorage.clearMenuOrder();
+                                    // 调用回调通知父组件重新初始化数据
+                                    widget.onClearCache?.call();
+                                  },
                                   child: Image(
-                                    image: data.iconImageProvider,
+                                    image: MemoryImage(clearIconBytes),
                                     width:
                                         ToolKitConstants.menuItemConfig.height,
                                     height:
@@ -208,11 +245,11 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(data.name),
+                                Text("清除缓存"),
                               ],
                             ),
-                          );
-                        }).toList(),
+                          ),
+                        ],
                       ),
                     ),
                   )

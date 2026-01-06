@@ -16,7 +16,7 @@ class ProxyPlugable extends StatefulWidget implements Pluggable {
   ImageProvider<Object> get iconImageProvider => MemoryImage(proxyIconBytes);
 
   @override
-  int get index => 11;
+  int get index => 9999;
 
   @override
   void onTrigger() {}

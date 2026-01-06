@@ -15,7 +15,7 @@ class AlignRulerPluggable extends StatefulWidget implements Pluggable {
       MemoryImage(alignRulerIconBytes);
 
   @override
-  int get index => 0;
+  int get index => 9988;
 
   @override
   String get name => '标尺';
@@ -25,7 +25,9 @@ class AlignRulerPluggable extends StatefulWidget implements Pluggable {
 }
 
 class _AlignRulerPluggableState extends State<AlignRulerPluggable> {
-  Size _currentWindowSize = _windowSize;
+  Size _currentWindowSize =
+      PlatformDispatcher.instance.views.first.physicalSize /
+      PlatformDispatcher.instance.views.first.devicePixelRatio;
   final Size _dotSize = const Size(50, 50);
   Offset _dotPosition = Offset.zero;
   BorderRadius? _radius;

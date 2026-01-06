@@ -17,7 +17,7 @@ class DioPlugable extends StatefulWidget implements Pluggable {
   ImageProvider<Object> get iconImageProvider => MemoryImage(dioIconBytes);
 
   @override
-  int get index => 13;
+  int get index => 9998;
 
   @override
   void onTrigger() {}

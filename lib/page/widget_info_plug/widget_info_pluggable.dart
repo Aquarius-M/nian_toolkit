@@ -11,7 +11,7 @@ class WidgetInfoPluggable extends StatefulWidget implements Pluggable {
   Widget buildWidget(BuildContext? context) => this;
 
   @override
-  int get index => 3;
+  int get index => 9994;
 
   @override
   String get name => '组件信息';
@@ -29,7 +29,7 @@ class _WidgetInfoPluggableState extends State<WidgetInfoPluggable>
   _WidgetInfoPluggableState()
     : selection = WidgetInspectorService.instance.selection;
 
-  final window = _flutterView;
+  final window = PlatformDispatcher.instance.views.first;
 
   Offset? _lastPointerLocation;
   OverlayEntry _overlayEntry = OverlayEntry(builder: (ctx) => Container());
@@ -119,14 +119,46 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
   @override
   void initState() {
     super.initState();
+    // 监听主按钮位置变化
+    _globalPositionNotifier.addListener(_onPositionChanged);
   }
 
-  // 获取主页面logoWidget的位置
+  @override
+  void dispose() {
+    // 移除位置监听器
+    _globalPositionNotifier.removeListener(_onPositionChanged);
+    super.dispose();
+    debugPaintSizeEnabled = false;
+    RendererBinding.instance.addPostFrameCallback((timeStamp) {
+      late RenderObjectVisitor visitor;
+      visitor = (RenderObject child) {
+        child.markNeedsPaint();
+        child.visitChildren(visitor);
+      };
+      WidgetsBinding.instance.renderViews
+          .where(
+            (RenderView v) =>
+                v.flutterView == PlatformDispatcher.instance.views.first,
+          )
+          .firstOrNull!
+          .visitChildren(visitor);
+    });
+  }
+
+  void _onPositionChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  // 获取主页面logoWidget的位置，放在主按钮下方
   Offset _getFollowPosition() {
-    // 默认位置
+    final mainButtonPosition = _globalPositionNotifier.position;
+    // 将按钮放在主按钮正下方，留出一点间距
+    const double spacing = 10.0;
     return Offset(
-      _windowSize.width - _dotSize.width - _margin,
-      _windowSize.height - (5 * _dotSize.height) - 10,
+      mainButtonPosition.dx,
+      mainButtonPosition.dy + _dotSize.height + spacing,
     );
   }
 
@@ -158,24 +190,10 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
         child.visitChildren(visitor);
       };
       WidgetsBinding.instance.renderViews
-          .where((RenderView v) => v.flutterView == _flutterView)
-          .firstOrNull!
-          .visitChildren(visitor);
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    debugPaintSizeEnabled = false;
-    RendererBinding.instance.addPostFrameCallback((timeStamp) {
-      late RenderObjectVisitor visitor;
-      visitor = (RenderObject child) {
-        child.markNeedsPaint();
-        child.visitChildren(visitor);
-      };
-      WidgetsBinding.instance.renderViews
-          .where((RenderView v) => v.flutterView == _flutterView)
+          .where(
+            (RenderView v) =>
+                v.flutterView == PlatformDispatcher.instance.views.first,
+          )
           .firstOrNull!
           .visitChildren(visitor);
     });

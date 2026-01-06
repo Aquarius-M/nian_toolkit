@@ -13,7 +13,7 @@ class ApplogPluggable extends StatelessWidget implements Pluggable {
   String get name => '日志';
 
   @override
-  int get index => 7;
+  int get index => 9997;
 
   @override
   void onTrigger() {}

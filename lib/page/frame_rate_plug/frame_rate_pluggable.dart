@@ -25,7 +25,7 @@ class FrameRatePluggable extends StatefulWidget implements Pluggable {
   String get name => "帧率";
 
   @override
-  int get index => 10;
+  int get index => 9989;
 
   @override
   Widget? buildWidget(BuildContext? context) => this;
@@ -39,10 +39,10 @@ class _FrameRatePluggableState extends State<FrameRatePluggable> {
       WidgetInspectorService.instance.selection;
 
   final Size _dotSize = const Size(130.0, 65.0);
-  double _dx = _windowSize.width - 130 - 10.0;
+  double _dx = KitUtils.deviceWidth - 130 - 10.0;
   double _dy = Platform.isIOS
-      ? _flutterView.padding.top - kToolbarHeight
-      : _flutterView.padding.top;
+      ? PlatformDispatcher.instance.views.first.padding.top - kToolbarHeight
+      : PlatformDispatcher.instance.views.first.padding.top;
   @override
   void initState() {
     super.initState();
@@ -51,7 +51,7 @@ class _FrameRatePluggableState extends State<FrameRatePluggable> {
   @override
   Widget build(BuildContext context) {
     Widget performanceObserver = PerformanceObserverWidget(
-      _flutterView,
+      PlatformDispatcher.instance.views.first,
       dragEnd,
       dragEvent,
     );
@@ -70,13 +70,13 @@ class _FrameRatePluggableState extends State<FrameRatePluggable> {
   }
 
   void dragEnd(DragEndDetails details) {
-    if (_dx + _dotSize.width / 2 < _windowSize.width / 2) {
+    if (_dx + _dotSize.width / 2 < KitUtils.deviceWidth / 2) {
       _dx = _margin;
     } else {
-      _dx = _windowSize.width - _dotSize.width - _margin * 2;
+      _dx = KitUtils.deviceWidth - _dotSize.width - _margin * 2;
     }
-    if (_dy + _dotSize.height > _windowSize.height) {
-      _dy = _windowSize.height - _dotSize.height - _margin * 2;
+    if (_dy + _dotSize.height > KitUtils.deviceHeight) {
+      _dy = KitUtils.deviceHeight - _dotSize.height - _margin * 2;
     } else if (_dy < 0) {
       _dy = _margin;
     }

@@ -9,8 +9,7 @@ class ToolKitMainPage extends StatefulWidget {
 
 /// 工具包主页面状态管理类
 class _ToolKitMainPageState extends State<ToolKitMainPage> {
-  // 合并后的状态管理
-  late PositionState _position;
+  // UI状态管理
   late UIState _uiState;
 
   // 插件数据
@@ -21,20 +20,29 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   void initState() {
     super.initState();
     _initializeStates();
+    // 监听全局位置变化，触发UI更新
+    _globalPositionNotifier.addListener(_onPositionChanged);
     // 异步加载插件数据，不阻塞初始化
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadPluginData();
     });
   }
 
+  /// 位置变化回调
+  void _onPositionChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   /// 初始化所有状态
   void _initializeStates() {
-    _position = PositionState(
-      dx:
-          _windowSize.width -
+    // 初始化全局位置状态
+    _globalPositionNotifier.updatePosition(
+      KitUtils.deviceWidth -
           _dotSize.width -
           ToolKitConstants.layoutMargins.left,
-      dy: _windowSize.height - (4 * _dotSize.height),
+      KitUtils.deviceHeight - (4 * _dotSize.height),
     );
     _uiState = UIState();
     _isLoading = true; // 初始化时设置为加载状态
@@ -43,19 +51,19 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   /// 加载插件数据
   void _loadPluginData() async {
     _isLoading = true;
-    
+
     // 获取所有已注册的插件
     final allPlugins = ToolKitPluginManager.instance.pluginsMap.values
         .where((plugin) => plugin != null)
         .cast<Pluggable>()
         .toList();
-    
+
     // 从本地存储加载保存的排序
     final savedOrder = await MenuOrderStorage.loadMenuOrder();
-    
+
     // 根据保存的排序重新排列插件，只显示已导入的插件
     _dataList = MenuOrderStorage.reorderMenuItems(allPlugins, savedOrder);
-    
+
     if (mounted) {
       setState(() {
         _isLoading = false;
@@ -71,6 +79,13 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
       _dataList = reorderedList;
     });
     // 排序保存逻辑已在 ToolKitMenuWidget 中实现
+  }
+
+  /// 处理清除缓存
+  void _handleClearCache() {
+    _initializeStates();
+    // 重新加载插件数据，恢复到原始顺序
+    _loadPluginData();
   }
 
   /// 处理菜单项点击事件
@@ -174,8 +189,11 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
       MediaQuery.of(context).size,
     );
 
-    _position.updatePosition(constrainedPosition.dx, constrainedPosition.dy);
-    setState(() {});
+    // 直接更新全局位置状态（会触发 _onPositionChanged 回调）
+    _globalPositionNotifier.updatePosition(
+      constrainedPosition.dx,
+      constrainedPosition.dy,
+    );
   }
 
   /// 处理拖拽结束事件，实现自动吸附功能
@@ -183,34 +201,37 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
     final screenSize = MediaQuery.of(context).size;
     final margin = ToolKitConstants.layoutMargins.left;
 
+    // 获取当前位置
+    final currentPosition = _globalPositionNotifier.position;
+    double newDx = currentPosition.dx;
+    double newDy = currentPosition.dy;
+
     // 自动吸附到左右边缘
-    if (_position.dx + _dotSize.width / 2 < screenSize.width / 2) {
-      _position.dx = margin;
+    if (newDx + _dotSize.width / 2 < screenSize.width / 2) {
+      newDx = margin;
     } else {
-      _position.dx = screenSize.width - _dotSize.width - margin;
+      newDx = screenSize.width - _dotSize.width - margin;
     }
 
     // 确保Y轴位置在允许范围内
     final maxYOffset = ToolKitConstants.positionOffsets.dy;
     final minY = ToolKitConstants.positionConstraints.dy;
 
-    if (_position.dy + _dotSize.height > screenSize.height - maxYOffset) {
-      _position.dy = screenSize.height - _dotSize.height - margin - maxYOffset;
-    } else if (_position.dy < minY) {
-      _position.dy = minY + margin;
+    if (newDy + _dotSize.height > screenSize.height - maxYOffset) {
+      newDy = screenSize.height - _dotSize.height - margin - maxYOffset;
+    } else if (newDy < minY) {
+      newDy = minY + margin;
     }
 
     // 最终边界检查
-    _position.dx = _position.dx.clamp(
-      margin,
-      screenSize.width - _dotSize.width - margin,
-    );
-    _position.dy = _position.dy.clamp(
+    newDx = newDx.clamp(margin, screenSize.width - _dotSize.width - margin);
+    newDy = newDy.clamp(
       minY + margin,
       screenSize.height - _dotSize.height - margin - maxYOffset,
     );
 
-    setState(() {});
+    // 更新全局位置状态（会触发 _onPositionChanged 回调）
+    _globalPositionNotifier.updatePosition(newDx, newDy);
   }
 
   /// 处理主按钮点击事件
@@ -270,11 +291,15 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
 
   @override
   void dispose() {
+    // 移除全局位置监听器
+    _globalPositionNotifier.removeListener(_onPositionChanged);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final position = _globalPositionNotifier.position;
+
     return Stack(
       children: [
         // 当前激活的页面内容（如果有的话）
@@ -287,15 +312,16 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
             isLoading: _isLoading,
             onMenuItemTap: _handleMenuItemTap,
             onCloseMenu: _closeMenu,
-            buttonPosition: Offset(_position.dx, _position.dy),
+            buttonPosition: position,
             buttonSize: _dotSize,
             parentContext: context,
             onReorder: _handleMenuReorder,
+            onClearCache: _handleClearCache,
           ),
         // 主按钮
         Positioned(
-          left: _position.dx,
-          top: _position.dy,
+          left: position.dx,
+          top: position.dy,
           child: GestureDetector(
             onTap: onTap,
             onVerticalDragEnd: dragEnd,

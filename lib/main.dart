@@ -64,15 +64,29 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
 
   // 初始化默认插件
   List<Pluggable> commonPluginsList = [
+    //9999
     const ProxyPlugable(),
+    //9998
     const DioPlugable(),
-    const FrameRatePluggable(),
-    const RegularPluggable(),
+    //9997
     const ApplogPluggable(),
+    //9996
     const AppInfoPluggable(),
+    //9995
     const DatabasePluggable(),
+    //9994
     if (kDebugMode) const WidgetInfoPluggable(),
+    //9993
     if (kDebugMode) const WidgetDetailPluggable(),
+    //9992
+    const PerformancePluggable(),
+    //9991
+    const RegularPluggable(),
+    //9990
+    const ColorPickerPluggable(scale: 5, size: Size(70, 70)),
+    //9989
+    const FrameRatePluggable(),
+    //9988
     const AlignRulerPluggable(),
   ];
 
@@ -101,7 +115,7 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
   void _replaceChild() {
     Widget layoutChild = Stack(
       children: <Widget>[
-        RepaintBoundary(key: _rootKey, child: widget.child),
+        RepaintBoundary(key: rootKey, child: widget.child),
         MediaQuery(
           data: MediaQueryData.fromView(
             WidgetsBinding.instance.platformDispatcher.implicitView!,

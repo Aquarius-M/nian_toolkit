@@ -6,7 +6,7 @@ class HitTest {
     Offset? position, {
     double edgeHitMargin = 0.0,
   }) {
-    final dynamic ignorePointer = _rootKey.currentContext!.findRenderObject();
+    final dynamic ignorePointer = rootKey.currentContext!.findRenderObject();
     final RenderObject userRender = ignorePointer.child;
 
     bool hitTestHelper(

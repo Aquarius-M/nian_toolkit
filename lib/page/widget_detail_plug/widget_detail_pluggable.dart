@@ -11,7 +11,7 @@ class WidgetDetailPluggable extends StatelessWidget implements Pluggable {
       MemoryImage(widgetDetailIconBytes);
 
   @override
-  int get index => 2;
+  int get index => 9993;
 
   @override
   String get name => '组件详情';
@@ -35,7 +35,7 @@ class _DetailPage extends StatefulWidget {
 class _DetailPageState extends State<_DetailPage> with WidgetsBindingObserver {
   _DetailPageState() : selection = WidgetInspectorService.instance.selection;
 
-  final window = _flutterView;
+  final window = PlatformDispatcher.instance.views.first;
 
   Offset? _lastPointerLocation;
 

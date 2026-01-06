@@ -13,7 +13,7 @@ class DatabasePluggable extends StatelessWidget implements Pluggable {
   String get name => '数据库';
 
   @override
-  int get index => 5;
+  int get index => 9995;
 
   @override
   void onTrigger() {}

@@ -16,7 +16,7 @@ class RegularPluggable extends StatefulWidget implements Pluggable {
   ImageProvider<Object> get iconImageProvider => MemoryImage(regularIconBytes);
 
   @override
-  int get index => 8;
+  int get index => 9991;
 
   @override
   void onTrigger() {}

@@ -68,15 +68,6 @@ class KitStringUtils {
   static void copy(String? text, {String? toastText}) {
     Clipboard.setData(ClipboardData(text: text!));
     HapticFeedback.lightImpact();
-  }
-}
-
-class KitColorUtils {
-  /// 取随机颜色
-  static Color randomColor() {
-    var red = math.Random.secure().nextInt(255);
-    var greed = math.Random.secure().nextInt(255);
-    var blue = math.Random.secure().nextInt(255);
-    return Color.fromARGB(255, red, greed, blue);
+    if (toastText != null) {}
   }
 }
