@@ -1,23 +1,23 @@
 part of '../../nian_toolkit.dart';
 
 /// 菜单项信息
-class _PluggableInfo {
+class PluggableInfo {
   final int index;
   final String name;
 
-  _PluggableInfo(this.index, this.name);
+  PluggableInfo(this.index, this.name);
 
   /// 序列化为字符串：index|name
   String serialize() => '$index|$name';
 
   /// 从字符串反序列化
-  static _PluggableInfo? deserialize(String str) {
+  static PluggableInfo? deserialize(String str) {
     try {
       final parts = str.split('|');
       if (parts.length != 2) return null;
       final index = int.tryParse(parts[0]);
       if (index == null) return null;
-      return _PluggableInfo(index, parts[1]);
+      return PluggableInfo(index, parts[1]);
     } catch (e) {
       return null;
     }
@@ -36,7 +36,7 @@ class MenuOrderStorage {
       // 将菜单项转换为可序列化的数据（同时保存 index 和 name）
       final orderList = menuItems
           .where((item) => item != null)
-          .map((item) => _PluggableInfo(item!.index, item.name).serialize())
+          .map((item) => PluggableInfo(item!.index, item.name).serialize())
           .toList();
 
       return await prefs.setStringList(_keyMenuOrder, orderList);
@@ -47,7 +47,7 @@ class MenuOrderStorage {
   }
 
   /// 加载菜单项排序
-  static Future<List<_PluggableInfo>?> loadMenuOrder() async {
+  static Future<List<PluggableInfo>?> loadMenuOrder() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final stringList = prefs.getStringList(_keyMenuOrder);
@@ -55,8 +55,8 @@ class MenuOrderStorage {
 
       // 反序列化为 _PluggableInfo 列表
       return stringList
-          .map((str) => _PluggableInfo.deserialize(str))
-          .whereType<_PluggableInfo>()
+          .map((str) => PluggableInfo.deserialize(str))
+          .whereType<PluggableInfo>()
           .toList();
     } catch (e) {
       debugPrint('Error loading menu order: $e');
@@ -67,7 +67,7 @@ class MenuOrderStorage {
   /// 根据保存的排序重新排列菜单项
   static List<Pluggable?> reorderMenuItems(
     List<Pluggable?> originalItems,
-    List<_PluggableInfo>? savedOrder,
+    List<PluggableInfo>? savedOrder,
   ) {
     if (savedOrder == null || savedOrder.isEmpty) {
       return originalItems;

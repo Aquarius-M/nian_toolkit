@@ -301,7 +301,7 @@ class _ResponseCardState extends State<_ResponseCard> {
   Widget _detailedContent(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: _isExpanded,
-      builder: (_, bool value, __) {
+      builder: (_, bool value, _) {
         if (!value) {
           return const SizedBox.shrink();
         }

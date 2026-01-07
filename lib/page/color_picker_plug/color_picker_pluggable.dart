@@ -17,7 +17,7 @@ class ColorPickerPluggable extends StatefulWidget implements Pluggable {
   });
 
   @override
-  _ColorSuckerState createState() => _ColorSuckerState();
+  ColorSuckerState createState() => ColorSuckerState();
 
   @override
   Widget buildWidget(BuildContext? context) => this;
@@ -35,7 +35,7 @@ class ColorPickerPluggable extends StatefulWidget implements Pluggable {
   ImageProvider<Object> get iconImageProvider => MemoryImage(icon.iconBytes);
 }
 
-class _ColorSuckerState extends State<ColorPickerPluggable> {
+class ColorSuckerState extends State<ColorPickerPluggable> {
   late Size _magnifierSize;
   double? _scale;
   BorderRadius? _radius;
