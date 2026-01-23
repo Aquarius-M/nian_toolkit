@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nian_toolkit/nian_toolkit.dart';
-import 'icon.dart';
 
 class CustomPluggable implements Pluggable {
   static final CustomPluggable _instance = CustomPluggable._internal();
@@ -19,7 +18,7 @@ class CustomPluggable implements Pluggable {
   }
 
   @override
-  Widget? iconWidget() => Image.memory(customIconBytes);
+  Widget? iconWidget() => null;
 
   @override
   int get index => 9999;
