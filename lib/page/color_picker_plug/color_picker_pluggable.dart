@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
 import 'package:nian_toolkit/nian_toolkit.dart';
-import 'icon.dart' as icon;
+import 'package:nian_toolkit/icons/plugin_icons.dart';
 
 class ColorPickerPluggable extends StatefulWidget implements Pluggable {
   final double scale;
@@ -23,6 +23,9 @@ class ColorPickerPluggable extends StatefulWidget implements Pluggable {
   Widget buildWidget(BuildContext? context) => this;
 
   @override
+  Widget? iconWidget() => PluginIcons.colorPicker;
+
+  @override
   String get name => '取色器';
 
   @override
@@ -30,9 +33,6 @@ class ColorPickerPluggable extends StatefulWidget implements Pluggable {
 
   @override
   void onTrigger() {}
-
-  @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(icon.iconBytes);
 }
 
 class ColorSuckerState extends State<ColorPickerPluggable> {
@@ -109,7 +109,7 @@ class ColorSuckerState extends State<ColorPickerPluggable> {
   Future<void> _captureScreen() async {
     try {
       RenderRepaintBoundary boundary =
-          rootKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          ToolkitKeys.rootKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage();
       ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,

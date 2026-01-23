@@ -7,8 +7,7 @@ class AppInfoPluggable extends StatefulWidget implements Pluggable {
   Widget? buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(appDeviceInfoIconBytes);
+  Widget? iconWidget() => PluginIcons.appDeviceInfo;
 
   @override
   String get name => '应用信息';

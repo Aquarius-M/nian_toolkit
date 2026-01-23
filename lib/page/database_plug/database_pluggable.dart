@@ -7,7 +7,7 @@ class DatabasePluggable extends StatelessWidget implements Pluggable {
   Widget? buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(databaseIconBytes);
+  Widget? iconWidget() => PluginIcons.database;
 
   @override
   String get name => '数据库';

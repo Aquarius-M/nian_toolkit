@@ -1,11 +1,11 @@
 part of 'nian_toolkit.dart';
 
 class NianToolKit {
+  /// 【app】主应用
+  ///
+  /// 【showKit】是否显示kit
+  ///
   /// 【pluginsList】自定义插件列表
-  ///
-  /// 【logConfig】日志服务配置，控制台输出只在debug模式下输出
-  ///
-  /// 【errorConfig】错误配置，包含方法错误，页面错误
 
   static void run(
     /// 主应用
@@ -62,43 +62,11 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
     builder: (_) => const SizedBox.shrink(),
   );
 
-  // 初始化默认插件
-  List<Pluggable> commonPluginsList = [
-    //9999
-    const ProxyPlugable(),
-    //9998
-    const DioPlugable(),
-    //9997
-    const ApplogPluggable(),
-    //9996
-    const AppInfoPluggable(),
-    //9995
-    const DatabasePluggable(),
-    //9994
-    if (kDebugMode) const WidgetInfoPluggable(),
-    //9993
-    if (kDebugMode) const WidgetDetailPluggable(),
-    //9992
-    const PerformancePluggable(),
-    //9991
-    const RegularPluggable(),
-    //9990
-    const ColorPickerPluggable(scale: 5, size: Size(70, 70)),
-    //9989
-    const FrameRatePluggable(),
-    //9988
-    const AlignRulerPluggable(),
-  ];
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this); // 注册监听器
     super.initState();
-    ToolKitPluginManager.instance.registerAll(widget.pluginsList ?? []).then((
-      value,
-    ) {
-      ToolKitPluginManager.instance.registerAll(commonPluginsList);
-    });
+    _registerPlugins();
 
     _replaceChild();
     // 延迟到下一帧执行，确保overlay已经准备好
@@ -115,12 +83,12 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
   void _replaceChild() {
     Widget layoutChild = Stack(
       children: <Widget>[
-        RepaintBoundary(key: rootKey, child: widget.child),
+        RepaintBoundary(key: ToolkitKeys.rootKey, child: widget.child),
         MediaQuery(
           data: MediaQueryData.fromView(
             WidgetsBinding.instance.platformDispatcher.implicitView!,
           ),
-          child: ScaffoldMessenger(child: Overlay(key: _overlayKey)),
+          child: ScaffoldMessenger(child: Overlay(key: ToolkitKeys.overlayKey)),
         ),
       ],
     );
@@ -130,7 +98,7 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
   void _injectOverlay(bool isShow) {
     if (isShow) {
       // 确保overlay state存在
-      if (_overlayKey.currentState != null) {
+      if (ToolkitKeys.overlayKey.currentState != null) {
         _overlayEntry = OverlayEntry(
           canSizeOverlay: true,
           builder: (_) => Material(
@@ -138,13 +106,25 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
             child: ToolKitMainPage(),
           ),
         );
-        _overlayKey.currentState!.insert(_overlayEntry);
+        ToolkitKeys.overlayKey.currentState!.insert(_overlayEntry);
       }
     } else {
       if (_overlayEntry.mounted) {
         _overlayEntry.remove();
       }
     }
+  }
+
+  Future<void> _registerPlugins() async {
+    await ToolKitPluginManager.instance.registerAll(widget.pluginsList ?? []);
+    await ToolKitPluginManager.instance.registerAll(
+      ToolKitPluginManager.instance.commonList,
+    );
+  }
+
+  Future<void> reRegisterPlugins() async {
+    ToolKitPluginManager.instance.clear();
+    await _registerPlugins();
   }
 
   @override
@@ -159,7 +139,7 @@ class _ToolKitWidgetState extends State<ToolKitWidget>
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: _devThemeData,
+      theme: toolkitThemeData,
       builder: (context, child) {
         return Material(
           // 添加 Material widget

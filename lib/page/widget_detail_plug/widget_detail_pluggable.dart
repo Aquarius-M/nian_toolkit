@@ -7,8 +7,7 @@ class WidgetDetailPluggable extends StatelessWidget implements Pluggable {
   Widget buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(widgetDetailIconBytes);
+  Widget? iconWidget() => PluginIcons.widgetDetail;
 
   @override
   int get index => 9993;

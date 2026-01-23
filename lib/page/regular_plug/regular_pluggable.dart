@@ -13,7 +13,7 @@ class RegularPluggable extends StatefulWidget implements Pluggable {
   String get name => '正则';
 
   @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(regularIconBytes);
+  Widget? iconWidget() => PluginIcons.regular;
 
   @override
   int get index => 9991;

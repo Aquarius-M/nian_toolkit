@@ -5,7 +5,7 @@ abstract class Pluggable {
   int get index;
   void onTrigger();
   Widget? buildWidget(BuildContext? context);
-  ImageProvider get iconImageProvider;
+  Widget? iconWidget();
 }
 
 typedef StreamFilter = bool Function(dynamic);

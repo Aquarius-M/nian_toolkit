@@ -11,8 +11,7 @@ class AlignRulerPluggable extends StatefulWidget implements Pluggable {
   Widget buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(alignRulerIconBytes);
+  Widget? iconWidget() => PluginIcons.alignRuler;
 
   @override
   int get index => 9988;

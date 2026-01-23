@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../icon.dart' as icon;
+import 'package:nian_toolkit/icons/plugin_icons.dart';
 
 typedef OnSubmitHandle = void Function(String text);
 typedef OnChangeHandle = void Function(String text);
 typedef OnFocusChangeHandle = void Function(bool focus);
 
-enum BarStyle {
-  solid,
-  border,
-}
+enum BarStyle { solid, border }
 
 class ToolSearchBar extends StatefulWidget {
   final String placeHolder;
@@ -101,12 +98,9 @@ class _SearchInputState extends State<ToolSearchBar> {
 
   Widget _buildSearcIcon() {
     return Container(
-        margin: const EdgeInsets.only(right: 11.0),
-        child: Image.memory(
-          icon.widgetDetailIconBytes,
-          width: 16,
-          height: 16,
-        ));
+      margin: const EdgeInsets.only(right: 11.0),
+      child: PluginIcons.widgetDetail,
+    );
   }
 
   Widget _buildClearIcon() {
@@ -123,11 +117,7 @@ class _SearchInputState extends State<ToolSearchBar> {
       },
       child: Container(
         margin: const EdgeInsets.only(left: 16.0),
-        child: const Icon(
-          Icons.close,
-          size: 16,
-          color: Colors.black54,
-        ),
+        child: const Icon(Icons.close, size: 16, color: Colors.black54),
       ),
     );
   }
@@ -136,7 +126,7 @@ class _SearchInputState extends State<ToolSearchBar> {
     List<TextInputFormatter> formatters = [];
     if (widget.inputCharactersLength > 0) {
       formatters = [
-        LengthLimitingTextInputFormatter(widget.inputCharactersLength)
+        LengthLimitingTextInputFormatter(widget.inputCharactersLength),
       ];
     }
 
@@ -160,18 +150,19 @@ class _SearchInputState extends State<ToolSearchBar> {
         ),
         cursorColor: widget.cursorColor ?? Colors.red,
         decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.zero,
-            border: InputBorder.none,
-            hintText: widget.placeHolder,
-            hintMaxLines: 1,
-            hintStyle: TextStyle(
-              fontSize: 15.0,
-              color: widget.style == BarStyle.border
-                  ? Colors.black38
-                  : Colors.black54,
-              textBaseline: TextBaseline.alphabetic,
-            )),
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+          border: InputBorder.none,
+          hintText: widget.placeHolder,
+          hintMaxLines: 1,
+          hintStyle: TextStyle(
+            fontSize: 15.0,
+            color: widget.style == BarStyle.border
+                ? Colors.black38
+                : Colors.black54,
+            textBaseline: TextBaseline.alphabetic,
+          ),
+        ),
         inputFormatters: formatters,
       ),
     );
@@ -184,21 +175,27 @@ class _SearchInputState extends State<ToolSearchBar> {
               color: Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(6.0)),
               border: Border.all(
-                  color: Colors.black12, style: BorderStyle.solid, width: 1))
+                color: Colors.black12,
+                style: BorderStyle.solid,
+                width: 1,
+              ),
+            )
           : BoxDecoration(
               color: Colors.black54.withValues(alpha: 0.04),
-              borderRadius: const BorderRadius.all(Radius.circular(6.0))),
-      padding:
-          const EdgeInsets.only(top: 9.0, left: 12.0, right: 12.0, bottom: 8.0),
+              borderRadius: const BorderRadius.all(Radius.circular(6.0)),
+            ),
+      padding: const EdgeInsets.only(
+        top: 9.0,
+        left: 12.0,
+        right: 12.0,
+        bottom: 8.0,
+      ),
       child: Flex(
         direction: Axis.horizontal,
         children: <Widget>[
-          Expanded(
-            flex: 0,
-            child: _buildSearcIcon(),
-          ),
+          Expanded(flex: 0, child: _buildSearcIcon()),
           Expanded(flex: 1, child: _buildTextField()),
-          Expanded(flex: 0, child: _buildClearIcon())
+          Expanded(flex: 0, child: _buildClearIcon()),
         ],
       ),
     );
@@ -208,9 +205,10 @@ class _SearchInputState extends State<ToolSearchBar> {
     Widget right;
     if (widget.right != null) {
       right = Container(
-          constraints: const BoxConstraints(maxHeight: 38),
-          padding: const EdgeInsets.only(left: 20.0, right: 20),
-          child: widget.right);
+        constraints: const BoxConstraints(maxHeight: 38),
+        padding: const EdgeInsets.only(left: 20.0, right: 20),
+        child: widget.right,
+      );
     } else {
       if (widget.cancelText == null) {
         right = const SizedBox(width: 0, height: 0);
@@ -229,13 +227,14 @@ class _SearchInputState extends State<ToolSearchBar> {
       }
     }
     return GestureDetector(
-        onTap: () {
-          _inputSubmitHandle(_inputController.text);
-          if (widget.rightAction != null) {
-            widget.rightAction!();
-          }
-        },
-        child: right);
+      onTap: () {
+        _inputSubmitHandle(_inputController.text);
+        if (widget.rightAction != null) {
+          widget.rightAction!();
+        }
+      },
+      child: right,
+    );
   }
 
   @override
@@ -243,11 +242,8 @@ class _SearchInputState extends State<ToolSearchBar> {
     return Flex(
       direction: Axis.horizontal,
       children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: _buildInput(),
-        ),
-        Expanded(flex: 0, child: _buildClickButton())
+        Expanded(flex: 1, child: _buildInput()),
+        Expanded(flex: 0, child: _buildClickButton()),
       ],
     );
   }

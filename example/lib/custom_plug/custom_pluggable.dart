@@ -15,15 +15,11 @@ class CustomPluggable implements Pluggable {
 
   @override
   Widget? buildWidget(BuildContext? context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("自定义工具"),
-      ),
-    );
+    return Scaffold(appBar: AppBar(title: const Text("自定义工具")));
   }
 
   @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(customIconBytes);
+  Widget? iconWidget() => Image.memory(customIconBytes);
 
   @override
   int get index => 9999;

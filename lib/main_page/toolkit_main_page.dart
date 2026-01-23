@@ -1,7 +1,7 @@
 part of '../../nian_toolkit.dart';
 
 class ToolKitMainPage extends StatefulWidget {
-  ToolKitMainPage({Key? key}) : super(key: _mainPageKey);
+  ToolKitMainPage({Key? key}) : super(key: ToolkitKeys.mainPageKey);
 
   @override
   State<ToolKitMainPage> createState() => _ToolKitMainPageState();
@@ -19,13 +19,23 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   @override
   void initState() {
     super.initState();
-    _initializeStates();
+    _uiState = UIState();
+
     // 监听全局位置变化，触发UI更新
-    _globalPositionNotifier.addListener(_onPositionChanged);
-    // 异步加载插件数据，不阻塞初始化
+    toolkitPosition.addListener(_onPositionChanged);
+
+    // 异步加载插件数据和初始化位置
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initPosition();
       _loadPluginData();
     });
+  }
+
+  @override
+  void dispose() {
+    // 移除全局位置监听器
+    toolkitPosition.removeListener(_onPositionChanged);
+    super.dispose();
   }
 
   /// 位置变化回调
@@ -35,22 +45,18 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
     }
   }
 
-  /// 初始化所有状态
-  void _initializeStates() {
-    // 初始化全局位置状态
-    _globalPositionNotifier.updatePosition(
-      KitUtils.deviceWidth -
-          _dotSize.width -
-          ToolKitConstants.layoutMargins.left,
-      KitUtils.deviceHeight - (4 * _dotSize.height),
-    );
-    _uiState = UIState();
-    _isLoading = true; // 初始化时设置为加载状态
+  /// 初始化位置
+  void _initPosition({bool? reInit}) {
+    if (!mounted) return;
+    final size = MediaQuery.of(context).size;
+    toolkitPosition.initPosition(size, reInit: reInit);
   }
 
   /// 加载插件数据
   void _loadPluginData() async {
-    _isLoading = true;
+    setState(() {
+      _isLoading = true;
+    });
 
     // 获取所有已注册的插件
     final allPlugins = ToolKitPluginManager.instance.pluginsMap.values
@@ -82,10 +88,18 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   }
 
   /// 处理清除缓存
-  void _handleClearCache() {
-    _initializeStates();
-    // 重新加载插件数据，恢复到原始顺序
-    _loadPluginData();
+  Future _handleClearCache() async {
+    _toggleMenu();
+    _initPosition(reInit: true);
+    final state = _devKitState;
+    if (state != null) {
+      await state.reRegisterPlugins();
+      if (mounted) {
+        _loadPluginData();
+      }
+    } else {
+      _loadPluginData();
+    }
   }
 
   /// 处理菜单项点击事件
@@ -146,93 +160,7 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
     }
   }
 
-  // ==================== 拖拽事件处理 ====================
-
-  /// 计算拖拽边界范围
-  Rect _getDragBounds(Size screenSize) {
-    return Rect.fromLTRB(
-      ToolKitConstants.positionConstraints.dx +
-          ToolKitConstants.layoutMargins.left,
-      ToolKitConstants.positionConstraints.dy +
-          ToolKitConstants.layoutMargins.top,
-      screenSize.width -
-          _dotSize.width -
-          ToolKitConstants.layoutMargins.right -
-          ToolKitConstants.positionOffsets.dx,
-      screenSize.height -
-          _dotSize.height -
-          ToolKitConstants.layoutMargins.bottom -
-          ToolKitConstants.positionOffsets.dy,
-    );
-  }
-
-  /// 限制位置在边界范围内
-  Offset _constrainPosition(Offset position, Size screenSize) {
-    final bounds = _getDragBounds(screenSize);
-    return Offset(
-      position.dx.clamp(bounds.left, bounds.right),
-      position.dy.clamp(bounds.top, bounds.bottom),
-    );
-  }
-
-  /// 处理拖拽更新事件
-  void dragEvent(DragUpdateDetails details) {
-    // 计算新位置（相对于按钮中心点）
-    final newPosition = Offset(
-      details.globalPosition.dx - _dotSize.width / 2,
-      details.globalPosition.dy - _dotSize.height / 2,
-    );
-
-    // 限制位置在边界范围内
-    final constrainedPosition = _constrainPosition(
-      newPosition,
-      MediaQuery.of(context).size,
-    );
-
-    // 直接更新全局位置状态（会触发 _onPositionChanged 回调）
-    _globalPositionNotifier.updatePosition(
-      constrainedPosition.dx,
-      constrainedPosition.dy,
-    );
-  }
-
-  /// 处理拖拽结束事件，实现自动吸附功能
-  void dragEnd(DragEndDetails details) {
-    final screenSize = MediaQuery.of(context).size;
-    final margin = ToolKitConstants.layoutMargins.left;
-
-    // 获取当前位置
-    final currentPosition = _globalPositionNotifier.position;
-    double newDx = currentPosition.dx;
-    double newDy = currentPosition.dy;
-
-    // 自动吸附到左右边缘
-    if (newDx + _dotSize.width / 2 < screenSize.width / 2) {
-      newDx = margin;
-    } else {
-      newDx = screenSize.width - _dotSize.width - margin;
-    }
-
-    // 确保Y轴位置在允许范围内
-    final maxYOffset = ToolKitConstants.positionOffsets.dy;
-    final minY = ToolKitConstants.positionConstraints.dy;
-
-    if (newDy + _dotSize.height > screenSize.height - maxYOffset) {
-      newDy = screenSize.height - _dotSize.height - margin - maxYOffset;
-    } else if (newDy < minY) {
-      newDy = minY + margin;
-    }
-
-    // 最终边界检查
-    newDx = newDx.clamp(margin, screenSize.width - _dotSize.width - margin);
-    newDy = newDy.clamp(
-      minY + margin,
-      screenSize.height - _dotSize.height - margin - maxYOffset,
-    );
-
-    // 更新全局位置状态（会触发 _onPositionChanged 回调）
-    _globalPositionNotifier.updatePosition(newDx, newDy);
-  }
+  // ==================== 拖拽与交互处理 ====================
 
   /// 处理主按钮点击事件
   void onTap() {
@@ -290,21 +218,16 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   }
 
   @override
-  void dispose() {
-    // 移除全局位置监听器
-    _globalPositionNotifier.removeListener(_onPositionChanged);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final position = _globalPositionNotifier.position;
+    final position = toolkitPosition.position;
+    final screenSize = MediaQuery.of(context).size;
 
     return Stack(
       children: [
         // 当前激活的页面内容（如果有的话）
         if (_uiState.hasActivePage && _uiState.currentWidget != null)
           _uiState.currentWidget!,
+
         // 悬浮菜单
         if (_uiState.showedMenu)
           ToolKitMenuWidget(
@@ -313,21 +236,24 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
             onMenuItemTap: _handleMenuItemTap,
             onCloseMenu: _closeMenu,
             buttonPosition: position,
-            buttonSize: _dotSize,
+            buttonSize: ToolkitConfig.dotSize,
             parentContext: context,
             onReorder: _handleMenuReorder,
-            onClearCache: _handleClearCache,
+            onClearCache: () async {
+              await _handleClearCache();
+            },
           ),
+
         // 主按钮
         Positioned(
           left: position.dx,
           top: position.dy,
           child: GestureDetector(
             onTap: onTap,
-            onVerticalDragEnd: dragEnd,
-            onHorizontalDragEnd: dragEnd,
-            onHorizontalDragUpdate: dragEvent,
-            onVerticalDragUpdate: dragEvent,
+            // 使用 onPan 系列回调统一处理拖拽，逻辑委托给 toolkitPosition
+            onPanUpdate: (details) =>
+                toolkitPosition.handleDragUpdate(details, screenSize),
+            onPanEnd: (details) => toolkitPosition.handleDragEnd(screenSize),
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -341,8 +267,8 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
                   ),
                 ],
               ),
-              width: _dotSize.width,
-              height: _dotSize.height,
+              width: ToolkitConfig.dotSize.width,
+              height: ToolkitConfig.dotSize.height,
               child: Center(child: _buildLogoWidget()),
             ),
           ),
@@ -354,8 +280,8 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
   /// 构建主按钮图标组件
   /// 根据不同状态显示不同图标：
   /// 1. 显示菜单且无活动页面时 -> 关闭图标 (Icons.close)
-  /// 2. 有选中的插件时 -> 插件图标 (_uiState.currentSelected!.iconImageProvider)
-  /// 3. 默认状态 -> 主图标 (MemoryImage(mainIconBytes))
+  /// 2. 有选中的插件时 -> 插件图标
+  /// 3. 默认状态 -> 主图标
   Widget _buildLogoWidget() {
     Widget child;
 
@@ -363,30 +289,33 @@ class _ToolKitMainPageState extends State<ToolKitMainPage> {
     if (_uiState.showedMenu && !_uiState.hasActivePage) {
       child = Icon(
         Icons.close,
-        size: ToolKitConstants.iconSizes.height,
+        size: PluginIcons.iconSize,
         color: Colors.black,
       );
     }
     // 状态2：有选中的插件时，显示插件图标
     else if (_uiState.currentSelected != null) {
-      child = Image(
-        gaplessPlayback: true,
-        image: _uiState.currentSelected!.iconImageProvider,
-        fit: BoxFit.contain,
+      child = Center(
+        child:
+            _uiState.currentSelected!.iconWidget() ??
+            Text(
+              _uiState.currentSelected!.name.substring(0, 1).toUpperCase(),
+              style: TextStyle(
+                fontSize: 16.0,
+                color: PluginIcons.defaultColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
       );
     }
     // 状态3：默认状态，显示主图标
     else {
-      child = Image(
-        gaplessPlayback: true,
-        image: MemoryImage(mainIconBytes),
-        fit: BoxFit.contain,
-      );
+      child = PluginIcons.main;
     }
 
     return SizedBox(
-      height: ToolKitConstants.iconSizes.width,
-      width: ToolKitConstants.iconSizes.width,
+      height: PluginIcons.iconSize,
+      width: PluginIcons.iconSize,
       child: child,
     );
   }

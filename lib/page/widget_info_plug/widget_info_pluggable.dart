@@ -20,8 +20,7 @@ class WidgetInfoPluggable extends StatefulWidget implements Pluggable {
   void onTrigger() {}
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(widgetInfoIconBytes);
+  Widget? iconWidget() => PluginIcons.widgetInfo;
 }
 
 class _WidgetInfoPluggableState extends State<WidgetInfoPluggable>
@@ -31,8 +30,9 @@ class _WidgetInfoPluggableState extends State<WidgetInfoPluggable>
 
   final window = PlatformDispatcher.instance.views.first;
 
-  Offset? _lastPointerLocation;
-  OverlayEntry _overlayEntry = OverlayEntry(builder: (ctx) => Container());
+  Offset? lastPointerLocation;
+  bool _debugPaintEnabled = false;
+  DateTime? _lastTapTime;
 
   final InspectorSelection selection;
 
@@ -46,90 +46,87 @@ class _WidgetInfoPluggableState extends State<WidgetInfoPluggable>
     });
   }
 
-  void _handlePanDown(DragDownDetails event) {
-    _lastPointerLocation = event.globalPosition;
-    _inspectAt(event.globalPosition);
-  }
+  // 双击切换布局边界显示
+  void _handleDoubleTap() {
+    setState(() {
+      _debugPaintEnabled = !_debugPaintEnabled;
+      debugPaintSizeEnabled = _debugPaintEnabled;
 
-  void _handlePanEnd(DragEndDetails details) {
-    final Rect bounds =
-        (Offset.zero & (window.physicalSize / window.devicePixelRatio)).deflate(
-          1.0,
-        );
-    if (!bounds.contains(_lastPointerLocation!)) {
-      setState(() {
-        selection.clear();
-      });
-    }
-  }
-
-  void _handleTap() {
-    if (_lastPointerLocation != null) {
-      _inspectAt(_lastPointerLocation);
-    }
+      // 刷新渲染
+      late RenderObjectVisitor visitor;
+      visitor = (RenderObject child) {
+        child.markNeedsPaint();
+        child.visitChildren(visitor);
+      };
+      WidgetsBinding.instance.renderViews
+          .where(
+            (RenderView v) =>
+                v.flutterView == PlatformDispatcher.instance.views.first,
+          )
+          .firstOrNull!
+          .visitChildren(visitor);
+    });
   }
 
   @override
   void initState() {
     super.initState();
     selection.clear();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _overlayEntry = OverlayEntry(builder: (_) => const _DebugPaintButton());
-      _overlayKey.currentState?.insert(_overlayEntry);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = <Widget>[];
-    GestureDetector gesture = GestureDetector(
-      onTap: _handleTap,
-      onPanDown: _handlePanDown,
-      onPanEnd: _handlePanEnd,
-      behavior: HitTestBehavior.opaque,
-      child: IgnorePointer(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+    return Stack(
+      textDirection: TextDirection.ltr,
+      children: [
+        // 使用 Listener 代替 GestureDetector，避免创建额外的渲染层
+        Positioned.fill(
+          child: Listener(
+            behavior: HitTestBehavior.opaque,
+            onPointerDown: (event) {
+              lastPointerLocation = event.position;
+              _inspectAt(event.position);
+            },
+            onPointerMove: (event) {
+              lastPointerLocation = event.position;
+              _inspectAt(event.position);
+            },
+            onPointerUp: (event) {
+              // 检查是否在边界外松手
+              final Rect bounds =
+                  (Offset.zero &
+                          (window.physicalSize / window.devicePixelRatio))
+                      .deflate(1.0);
+              if (!bounds.contains(event.position)) {
+                setState(() {
+                  selection.clear();
+                });
+              }
+
+              // 检测双击（300ms内）
+              final now = DateTime.now();
+              final lastTapTime = _lastTapTime;
+              _lastTapTime = now;
+
+              if (lastTapTime != null &&
+                  now.difference(lastTapTime).inMilliseconds < 300) {
+                _handleDoubleTap();
+              }
+            },
+            // 不需要 child，Listener 自己就能占据整个 Positioned.fill 区域
+          ),
         ),
-      ),
+        InspectorOverlay(selection: selection),
+      ],
     );
-    children.add(gesture);
-    children.add(InspectorOverlay(selection: selection));
-    return Stack(textDirection: TextDirection.ltr, children: children);
   }
 
   @override
   void dispose() {
     super.dispose();
-    if (_overlayEntry.mounted) {
-      _overlayEntry.remove();
-    }
-  }
-}
-
-class _DebugPaintButton extends StatefulWidget {
-  const _DebugPaintButton();
-
-  @override
-  State<StatefulWidget> createState() => _DebugPaintButtonState();
-}
-
-class _DebugPaintButtonState extends State<_DebugPaintButton> {
-  @override
-  void initState() {
-    super.initState();
-    // 监听主按钮位置变化
-    _globalPositionNotifier.addListener(_onPositionChanged);
-  }
-
-  @override
-  void dispose() {
-    // 移除位置监听器
-    _globalPositionNotifier.removeListener(_onPositionChanged);
-    super.dispose();
-    debugPaintSizeEnabled = false;
-    RendererBinding.instance.addPostFrameCallback((timeStamp) {
+    // 恢复布局边界显示状态
+    if (_debugPaintEnabled) {
+      debugPaintSizeEnabled = false;
       late RenderObjectVisitor visitor;
       visitor = (RenderObject child) {
         child.markNeedsPaint();
@@ -142,60 +139,6 @@ class _DebugPaintButtonState extends State<_DebugPaintButton> {
           )
           .firstOrNull!
           .visitChildren(visitor);
-    });
-  }
-
-  void _onPositionChanged() {
-    if (mounted) {
-      setState(() {});
     }
-  }
-
-  // 获取主页面logoWidget的位置，放在主按钮下方
-  Offset _getFollowPosition() {
-    final mainButtonPosition = _globalPositionNotifier.position;
-    // 将按钮放在主按钮正下方，留出一点间距
-    const double spacing = 10.0;
-    return Offset(
-      mainButtonPosition.dx,
-      mainButtonPosition.dy + _dotSize.height + spacing,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final position = _getFollowPosition();
-
-    return Positioned(
-      left: position.dx,
-      top: position.dy,
-      child: SizedBox(
-        width: _dotSize.width,
-        height: _dotSize.width,
-        child: FloatingActionButton(
-          elevation: 1,
-          onPressed: _showAllSize,
-          child: const Icon(Icons.all_out_sharp),
-        ),
-      ),
-    );
-  }
-
-  void _showAllSize() async {
-    debugPaintSizeEnabled = !debugPaintSizeEnabled;
-    setState(() {
-      late RenderObjectVisitor visitor;
-      visitor = (RenderObject child) {
-        child.markNeedsPaint();
-        child.visitChildren(visitor);
-      };
-      WidgetsBinding.instance.renderViews
-          .where(
-            (RenderView v) =>
-                v.flutterView == PlatformDispatcher.instance.views.first,
-          )
-          .firstOrNull!
-          .visitChildren(visitor);
-    });
   }
 }

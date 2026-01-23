@@ -15,8 +15,7 @@ class FrameRatePluggable extends StatefulWidget implements Pluggable {
   _FrameRatePluggableState createState() => _FrameRatePluggableState();
 
   @override
-  ImageProvider<Object> get iconImageProvider =>
-      MemoryImage(frameRateIconBytes);
+  Widget? iconWidget() => PluginIcons.frameRate;
 
   @override
   void onTrigger() {}
@@ -71,14 +70,14 @@ class _FrameRatePluggableState extends State<FrameRatePluggable> {
 
   void dragEnd(DragEndDetails details) {
     if (_dx + _dotSize.width / 2 < KitUtils.deviceWidth / 2) {
-      _dx = _margin;
+      _dx = ToolkitConfig.dotMargin;
     } else {
-      _dx = KitUtils.deviceWidth - _dotSize.width - _margin * 2;
+      _dx = KitUtils.deviceWidth - _dotSize.width - ToolkitConfig.dotMargin * 2;
     }
     if (_dy + _dotSize.height > KitUtils.deviceHeight) {
-      _dy = KitUtils.deviceHeight - _dotSize.height - _margin * 2;
+      _dy = KitUtils.deviceHeight - _dotSize.height - ToolkitConfig.dotMargin * 2;
     } else if (_dy < 0) {
-      _dy = _margin;
+      _dy = ToolkitConfig.dotMargin;
     }
     setState(() {});
   }

@@ -72,8 +72,8 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
   double _calculateMenuLeft() {
     try {
       final screenWidth = MediaQuery.of(widget.parentContext).size.width;
-      final menuWidth = ToolKitConstants.menuSize.width;
-      final menuPadding = ToolKitConstants.menuPadding.left;
+      final menuWidth = ToolkitConfig.getMenuSize(widget.parentContext).width;
+      final menuPadding = ToolkitConfig.menuItemPadding.left;
 
       // 边界检查
       if (screenWidth <= 0 || widget.buttonSize.width <= 0) {
@@ -103,7 +103,7 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
       return left.clamp(minLeft, maxLeft);
     } catch (e) {
       debugPrint('Error calculating menu left position: $e');
-      return ToolKitConstants.menuPadding.left;
+      return ToolkitConfig.menuItemPadding.left;
     }
   }
 
@@ -111,12 +111,12 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
   double _calculateMenuTop() {
     try {
       final screenHeight = MediaQuery.of(widget.parentContext).size.height;
-      final menuHeight = ToolKitConstants.menuSize.height;
+      final menuHeight = ToolkitConfig.getMenuSize(widget.parentContext).height;
 
       // 边界检查
       if (screenHeight <= 0 || widget.buttonSize.height <= 0) {
         debugPrint('Invalid screen or button dimensions');
-        return ToolKitConstants.menuSpacing;
+        return ToolkitConfig.menuSpacing;
       }
 
       final isOnTop = _isButtonOnTopSide();
@@ -125,15 +125,15 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
       final top = isOnTop
           ? widget.buttonPosition.dy +
                 widget.buttonSize.height +
-                ToolKitConstants
+                ToolkitConfig
                     .menuSpacing // 按钮在上半部分，菜单显示在按钮下方
           : widget.buttonPosition.dy -
                 menuHeight -
-                ToolKitConstants.menuSpacing; // 按钮在下半部分，菜单显示在按钮上方
+                ToolkitConfig.menuSpacing; // 按钮在下半部分，菜单显示在按钮上方
 
       // 确保菜单不会超出屏幕边界
-      final minTop = ToolKitConstants.menuSpacing;
-      final maxTop = screenHeight - menuHeight - ToolKitConstants.menuSpacing;
+      final minTop = ToolkitConfig.menuSpacing;
+      final maxTop = screenHeight - menuHeight - ToolkitConfig.menuSpacing;
 
       if (maxTop < minTop) {
         debugPrint('Screen too small for menu');
@@ -143,15 +143,16 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
       return top.clamp(minTop, maxTop);
     } catch (e) {
       debugPrint('Error calculating menu top position: $e');
-      return ToolKitConstants.menuSpacing;
+      return ToolkitConfig.menuSpacing;
     }
   }
 
   /// 构建菜单内容
   Widget _buildMenuContent() {
+    final menuSize = ToolkitConfig.getMenuSize(widget.parentContext);
     return Container(
-      width: ToolKitConstants.menuSize.width,
-      height: ToolKitConstants.menuSize.height,
+      width: menuSize.width,
+      height: menuSize.height,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -170,10 +171,10 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                 : SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     child: Padding(
-                      padding: ToolKitConstants.menuItemPadding,
+                      padding: EdgeInsets.all(6.0),
                       child: ReorderableWrap(
-                        spacing: ToolKitConstants.menuItemSpacing,
-                        runSpacing: ToolKitConstants.menuItemSpacing,
+                        spacing: 8.0,
+                        runSpacing: 8.0,
                         alignment: WrapAlignment.center,
                         onReorder: (int oldIndex, int newIndex) {
                           setState(() {
@@ -193,7 +194,7 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                             }
                             return SizedBox(
                               key: ValueKey(data.name), // 为每个item添加唯一key
-                              width: ToolKitConstants.menuItemConfig.width,
+                              width: ToolkitConfig.menuItemSize.width,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -202,14 +203,19 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                                     elevation: 2,
                                     backgroundColor: Colors.white,
                                     onPressed: () => widget.onMenuItemTap(data),
-                                    child: Image(
-                                      image: data.iconImageProvider,
-                                      width: ToolKitConstants
-                                          .menuItemConfig
-                                          .height,
-                                      height: ToolKitConstants
-                                          .menuItemConfig
-                                          .height,
+                                    child: Center(
+                                      child:
+                                          data.iconWidget() ??
+                                          Text(
+                                            data.name
+                                                .substring(0, 1)
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: PluginIcons.defaultColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -220,7 +226,7 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                           }),
                           SizedBox(
                             key: ValueKey("delete_cache"), // 为每个item添加唯一key
-                            width: ToolKitConstants.menuItemConfig.width,
+                            width: ToolkitConfig.menuItemSize.width,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -236,13 +242,7 @@ class _ToolKitMenuWidgetState extends State<ToolKitMenuWidget> {
                                     // 调用回调通知父组件重新初始化数据
                                     widget.onClearCache?.call();
                                   },
-                                  child: Image(
-                                    image: MemoryImage(clearIconBytes),
-                                    width:
-                                        ToolKitConstants.menuItemConfig.height,
-                                    height:
-                                        ToolKitConstants.menuItemConfig.height,
-                                  ),
+                                  child: PluginIcons.clear,
                                 ),
                                 const SizedBox(height: 4),
                                 Text("清除缓存"),

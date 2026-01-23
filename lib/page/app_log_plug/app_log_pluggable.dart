@@ -7,7 +7,7 @@ class ApplogPluggable extends StatelessWidget implements Pluggable {
   Widget? buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(appLogIconBytes);
+  Widget? iconWidget() => PluginIcons.appLog;
 
   @override
   String get name => '日志';

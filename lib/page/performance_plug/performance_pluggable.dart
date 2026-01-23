@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nian_toolkit/nian_toolkit.dart';
-import 'icon.dart' as icon;
+import 'package:nian_toolkit/icons/plugin_icons.dart';
 
 class PerformancePluggable extends StatefulWidget implements Pluggable {
   const PerformancePluggable({super.key});
@@ -12,7 +12,7 @@ class PerformancePluggable extends StatefulWidget implements Pluggable {
   Widget buildWidget(BuildContext? context) => this;
 
   @override
-  ImageProvider<Object> get iconImageProvider => MemoryImage(icon.iconBytes);
+  Widget? iconWidget() => PluginIcons.performance;
 
   @override
   String get name => '性能';
@@ -44,7 +44,9 @@ class _PerformancePluggableState extends State<PerformancePluggable> {
           child: GestureDetector(
             onVerticalDragUpdate: _overlayPanUpdate,
             child: Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width - 32,
+              margin: const EdgeInsets.only(left: 16, right: 16),
+              padding: EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
