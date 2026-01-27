@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nian_toolkit/nian_toolkit.dart';
+import 'package:nian_toolkit/toolkit.dart';
 
 import 'common/global.dart';
 import 'custom_plug/custom_pluggable.dart';
@@ -18,7 +18,7 @@ void main() async {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 
-  NianToolKit.run(const MyApp(), pluginsList: [CustomPluggable()]);
+  ToolKit.run(const MyApp(), pluginsList: [CustomPluggable()]);
 }
 
 class MyApp extends StatefulWidget {
@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       title: 'Flutter Demo',
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       navigatorKey: navigatorKey,
+      navigatorObservers: [RouteHistoryObserver()],
     );
   }
 }
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
     // await NianToolKit.checkStatus(withChange: true);
     log(list[1]);
+    ToolKit.hide();
   }
 
   @override
@@ -92,6 +94,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            ElevatedButton(
+              onPressed: () => ToolKit.show(isDarkMode: true),
+              child: const Text('显示 暗黑'),
+            ),
+            ElevatedButton(
+              onPressed: () => ToolKit.show(isDarkMode: false),
+              child: const Text('显示'),
+            ),
+            ElevatedButton(
+              onPressed: () => ToolKit.hide(),
+              child: const Text('隐藏'),
             ),
           ],
         ),

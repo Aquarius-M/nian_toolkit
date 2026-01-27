@@ -1,7 +1,14 @@
-// ignore_for_file: constant_identifier_names
-part of '../nian_toolkit.dart';
+part of '../toolkit.dart';
 
 class KitUtils {
+  static KitUtils? _instance;
+  static KitUtils get instance {
+    _instance ??= KitUtils._internal();
+    return _instance!;
+  }
+
+  KitUtils._internal();
+
   /// 设备宽高比
   static final devicePixelRatio =
       PlatformDispatcher.instance.views.first.devicePixelRatio;
@@ -61,13 +68,39 @@ class KitUtils {
       return 'Unsupported Platform';
     }
   }
-}
 
-class KitStringUtils {
   // 点击复制
-  static void copy(String? text, {String? toastText}) {
-    Clipboard.setData(ClipboardData(text: text!));
+  static void copy(BuildContext context, String? text, {String? toastText}) {
+    Clipboard.setData(ClipboardData(text: text ?? ""));
     HapticFeedback.lightImpact();
-    if (toastText != null) {}
+    if (toastText != null) {
+      showToast(context, message: toastText);
+    }
+  }
+
+  static void showToast(
+    BuildContext context, {
+    required String message,
+    bool isError = false,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 500),
+        content: Row(
+          children: [
+            Icon(
+              isError ? Icons.error_outline : Icons.check_circle,
+              color: context.appColor.textPrimary,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message, style: context.f16MediumTextPrimary)),
+          ],
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isError ? Colors.redAccent : Colors.green,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
   }
 }

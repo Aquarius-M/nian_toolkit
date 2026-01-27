@@ -1,4 +1,4 @@
-part of '../nian_toolkit.dart';
+part of '../toolkit.dart';
 
 class HitTest {
   // all of RenderObjects of current point

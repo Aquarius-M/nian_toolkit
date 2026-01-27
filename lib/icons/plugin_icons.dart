@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PluginIcons {
   static const iconSize = 30.0;
 
-  static const defaultColor = Colors.blue;
+  static const defaultColor = Colors.orangeAccent;
 
   static Widget _buildIcon(String assetPath, {Color? color}) {
     return SvgPicture.asset(

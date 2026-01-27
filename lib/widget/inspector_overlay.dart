@@ -1,21 +1,15 @@
-// ignore_for_file: library_private_types_in_public_api, non_nullable_equals_parameter
-
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'dart:ui' as ui;
-import 'dart:math' as math;
+part of '../toolkit.dart';
 
 double kScreenEdgeMargin = 10.0;
 double kTooltipPadding = 5.0;
 
 class InspectorOverlay extends LeafRenderObjectWidget {
-  const InspectorOverlay(
-      {super.key,
-      required this.selection,
-      this.needEdges = true,
-      this.needDescription = true});
+  const InspectorOverlay({
+    super.key,
+    required this.selection,
+    this.needEdges = true,
+    this.needDescription = true,
+  });
 
   final InspectorSelection selection;
 
@@ -26,14 +20,17 @@ class InspectorOverlay extends LeafRenderObjectWidget {
   @override
   _RenderInspectorOverlay createRenderObject(BuildContext context) {
     return _RenderInspectorOverlay(
-        selection: selection,
-        needDescription: needDescription,
-        needEdges: needEdges);
+      selection: selection,
+      needDescription: needDescription,
+      needEdges: needEdges,
+    );
   }
 
   @override
   void updateRenderObject(
-      BuildContext context, _RenderInspectorOverlay renderObject) {
+    BuildContext context,
+    _RenderInspectorOverlay renderObject,
+  ) {
     renderObject.selection = selection;
   }
 }
@@ -71,12 +68,19 @@ class _RenderInspectorOverlay extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     assert(needsCompositing);
-    context.addLayer(_InspectorOverlayLayer(
-      needEdges: needEdges,
-      needDescription: needDescription,
-      overlayRect: Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height),
-      selection: selection,
-    ));
+    context.addLayer(
+      _InspectorOverlayLayer(
+        needEdges: needEdges,
+        needDescription: needDescription,
+        overlayRect: Rect.fromLTWH(
+          offset.dx,
+          offset.dy,
+          size.width,
+          size.height,
+        ),
+        selection: selection,
+      ),
+    );
   }
 }
 
@@ -162,14 +166,23 @@ class _InspectorOverlayLayer extends Layer {
       }
     }
     final Rect targetRect = MatrixUtils.transformRect(
-        state.selected.transform, state.selected.rect);
+      state.selected.transform,
+      state.selected.rect,
+    );
     final Offset target = Offset(targetRect.left, targetRect.center.dy);
     const double offsetFromWidget = 9.0;
     final double verticalOffset = (targetRect.height) / 2 + offsetFromWidget;
 
     if (needDescription) {
-      _paintDescription(canvas, state.selectionInfo.message,
-          state.textDirection, target, verticalOffset, size, targetRect);
+      _paintDescription(
+        canvas,
+        state.selectionInfo.message,
+        state.textDirection,
+        target,
+        verticalOffset,
+        size,
+        targetRect,
+      );
     }
     return recorder.endRecording();
   }
@@ -195,9 +208,13 @@ class _InspectorOverlayLayer extends Layer {
         ..maxLines = 10
         ..ellipsis = '...'
         ..text = TextSpan(
-            style: const TextStyle(
-                color: Colors.white, fontSize: 12.0, height: 1.2),
-            text: message)
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12.0,
+            height: 1.2,
+          ),
+          text: message,
+        )
         ..textDirection = textDirection
         ..layout(maxWidth: maxWidth);
     }
@@ -236,16 +253,20 @@ class _InspectorOverlayLayer extends Layer {
       Offset(wedgeX, wedgeY + (tooltipBelow ? -wedgeSize : wedgeSize)),
     ];
     canvas.drawPath(Path()..addPolygon(wedge, true), tooltipBackground);
-    _textPainter!
-        .paint(canvas, tipOffset + Offset(kTooltipPadding, kTooltipPadding));
+    _textPainter!.paint(
+      canvas,
+      tipOffset + Offset(kTooltipPadding, kTooltipPadding),
+    );
     canvas.restore();
   }
 
   @override
   @protected
   bool findAnnotations<S extends Object>(
-      AnnotationResult<S> result, Offset localPosition,
-      {required bool onlyFirst}) {
+    AnnotationResult<S> result,
+    Offset localPosition, {
+    required bool onlyFirst,
+  }) {
     return false;
   }
 }
@@ -264,8 +285,10 @@ class _SelectionInfo {
         // ignore: invalid_use_of_protected_member
         .toId(renderObject!.toDiagnosticsNode(), '');
     if (widgetId == null) return null;
-    String infoStr = WidgetInspectorService.instance
-        .getSelectedSummaryWidget(null, widgetId);
+    String infoStr = WidgetInspectorService.instance.getSelectedSummaryWidget(
+      null,
+      widgetId,
+    );
     return json.decode(infoStr);
   }
 
@@ -320,8 +343,8 @@ class _InspectorOverlayRenderState {
 
 class _TransformedRect {
   _TransformedRect(RenderObject object)
-      : rect = object.semanticBounds,
-        transform = object.getTransformTo(null);
+    : rect = object.semanticBounds,
+      transform = object.getTransformTo(null);
 
   final Rect rect;
   final Matrix4 transform;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/nian_toolkit.dart';
+import 'package:nian_toolkit/toolkit.dart';
 
 class CustomPluggable implements Pluggable {
   static final CustomPluggable _instance = CustomPluggable._internal();
@@ -13,8 +13,19 @@ class CustomPluggable implements Pluggable {
   GlobalKey<NavigatorState>? navKey;
 
   @override
-  Widget? buildWidget(BuildContext? context) {
-    return Scaffold(appBar: AppBar(title: const Text("自定义工具")));
+  Widget? buildWidget(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "自定义工具",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
