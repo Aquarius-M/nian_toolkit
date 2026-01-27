@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PluginIcons {
-  static const iconSize = 30.0;
+  static const iconSize = 32.0;
 
   static const defaultColor = Colors.orangeAccent;
 
