@@ -28,8 +28,14 @@ class _PerformancePluggableState extends State<PerformancePluggable> {
   double _overlayY = 60.0;
 
   void _overlayPanUpdate(DragUpdateDetails dragDetails) {
+    final mediaQuery = MediaQuery.of(context);
+    final minY = mediaQuery.padding.top;
+    final maxY =
+        (mediaQuery.size.height - kToolbarHeight - mediaQuery.padding.bottom)
+            .clamp(minY, mediaQuery.size.height);
+    final newY = dragDetails.globalPosition.dy.clamp(minY, maxY);
     setState(() {
-      _overlayY = dragDetails.globalPosition.dy;
+      _overlayY = newY.toDouble();
     });
   }
 

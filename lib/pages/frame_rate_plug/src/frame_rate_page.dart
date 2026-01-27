@@ -44,8 +44,29 @@ class _FrameRatePageState extends State<FrameRatePage> {
   }
 
   void dragEvent(DragUpdateDetails details) {
-    _dx = details.globalPosition.dx - _dotSize.width / 2;
-    _dy = details.globalPosition.dy - _dotSize.height / 2;
+    final mediaQuery = MediaQuery.of(context);
+    final minX = ToolkitStatusManager.instance.minX;
+    final maxX = (mediaQuery.size.width - _dotSize.width - minX).clamp(
+      minX,
+      mediaQuery.size.width,
+    );
+
+    final minY = mediaQuery.padding.top;
+    final maxY =
+        (mediaQuery.size.height - _dotSize.height - mediaQuery.padding.bottom)
+            .clamp(minY, mediaQuery.size.height);
+
+    final newDx = (details.globalPosition.dx - _dotSize.width / 2).clamp(
+      minX,
+      maxX,
+    );
+    final newDy = (details.globalPosition.dy - _dotSize.height / 2).clamp(
+      minY,
+      maxY,
+    );
+
+    _dx = newDx.toDouble();
+    _dy = newDy.toDouble();
     setState(() {});
   }
 

@@ -326,19 +326,19 @@ class _InspectorOverlayRenderState {
   final TextDirection textDirection;
   final _SelectionInfo selectionInfo;
 
-  @override
-  bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
+  // @override
+  // bool operator ==(dynamic other) {
+  //   if (other.runtimeType != runtimeType) return false;
 
-    final _InspectorOverlayRenderState typedOther = other;
-    return overlayRect == typedOther.overlayRect &&
-        selected == typedOther.selected &&
-        listEquals<_TransformedRect>(candidates, typedOther.candidates);
-  }
+  //   final _InspectorOverlayRenderState typedOther = other;
+  //   return overlayRect == typedOther.overlayRect &&
+  //       selected == typedOther.selected &&
+  //       listEquals<_TransformedRect>(candidates, typedOther.candidates);
+  // }
 
-  @override
-  int get hashCode =>
-      Object.hash(overlayRect, selected, Object.hashAll(candidates));
+  // @override
+  // int get hashCode =>
+  //     Object.hash(overlayRect, selected, Object.hashAll(candidates));
 }
 
 class _TransformedRect {
@@ -349,13 +349,13 @@ class _TransformedRect {
   final Rect rect;
   final Matrix4 transform;
 
-  @override
-  bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
-    final _TransformedRect typedOther = other;
-    return rect == typedOther.rect && transform == typedOther.transform;
-  }
+  // @override
+  // bool operator ==(dynamic other) {
+  //   if (other.runtimeType != runtimeType) return false;
+  //   final _TransformedRect typedOther = other;
+  //   return rect == typedOther.rect && transform == typedOther.transform;
+  // }
 
-  @override
-  int get hashCode => Object.hash(rect, transform);
+  // @override
+  // int get hashCode => Object.hash(rect, transform);
 }

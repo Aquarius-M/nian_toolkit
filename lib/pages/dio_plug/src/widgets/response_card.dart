@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:nian_toolkit/app_theme/app_theme.dart';
+import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
 import 'package:nian_toolkit/toolkit.dart';
 
 class ResponseCard extends StatefulWidget {
@@ -158,8 +160,8 @@ class ResponseCardState extends State<ResponseCard> {
               '${_duration.inMilliseconds}ms',
               style: TextStyle(
                 color: _duration.inMilliseconds > 1000
-                    ? Colors.red
-                    : Theme.of(context).textTheme.bodySmall?.color,
+                    ? context.appColor.error
+                    : context.appColor.textTertiary,
                 fontSize: 12,
               ),
             ),
@@ -167,7 +169,7 @@ class ResponseCardState extends State<ResponseCard> {
             Text(
               _startTime.hms(),
               style: TextStyle(
-                color: Theme.of(context).textTheme.bodySmall?.color,
+                color: context.appColor.textTertiary,
                 fontSize: 12,
               ),
             ),
@@ -176,7 +178,7 @@ class ResponseCardState extends State<ResponseCard> {
         const SizedBox(height: 8),
         Text(
           _requestUri.toString(),
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          style: context.f14MediumTextPrimary,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -223,7 +225,7 @@ class ResponseCardState extends State<ResponseCard> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.appColor.backgroundInput,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -267,31 +269,20 @@ class _TagText extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$tag:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
+            children: [Text('$tag:', style: context.f14BoldTextPrimary)],
           ),
           const SizedBox(height: 4),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
-              ),
+              color: context.appColor.backgroundPrimary,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: context.appColor.borderGutter),
             ),
             child: SelectableText(
               content ?? "",
-              style: const TextStyle(fontSize: 14),
+              style: context.f14MediumTextPrimary,
             ),
           ),
         ],

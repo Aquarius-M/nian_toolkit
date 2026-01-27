@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nian_toolkit/app_theme/app_theme.dart';
+import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
 
 import '../../../toolkit.dart';
 
@@ -97,8 +98,14 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
   }
 
   void _toolBarPanUpdate(DragUpdateDetails dragDetails) {
+    final mediaQuery = MediaQuery.of(context);
+    final minY = mediaQuery.padding.top;
+    final maxY =
+        (mediaQuery.size.height - kToolbarHeight - mediaQuery.padding.bottom)
+            .clamp(minY, mediaQuery.size.height);
+    final newY = (dragDetails.globalPosition.dy - 40).clamp(minY, maxY);
     setState(() {
-      _toolBarY = dragDetails.globalPosition.dy - 40;
+      _toolBarY = newY.toDouble();
     });
   }
 
@@ -138,7 +145,7 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
       elevation: 6,
       borderRadius: BorderRadius.circular(16),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 16, top: 12),
+        padding: const EdgeInsets.only(bottom: 6, top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -182,30 +189,26 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
                 ],
               ),
             ),
-            SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Row(
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.only(left: 20),
-                    height: 20,
-                    child: Switch(
+                    // height: 18,
+                    child: Switch.adaptive(
                       value: _switched,
                       onChanged: _switchChanged,
-                      activeThumbColor: Colors.red,
+                      activeThumbColor: context.appColor.primary500,
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
                         '开启后松手将会自动吸附至最近widget',
                         softWrap: true,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: context.f16MediumTextPrimary,
                       ),
                     ),
                   ),
@@ -288,7 +291,10 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
                 width: _dotSize.width,
                 decoration: BoxDecoration(
                   borderRadius: _radius,
-                  border: Border.all(color: Colors.black, width: 1),
+                  border: Border.all(
+                    color: context.appColor.textPrimary,
+                    width: 1,
+                  ),
                 ),
                 child: Center(
                   child: Container(

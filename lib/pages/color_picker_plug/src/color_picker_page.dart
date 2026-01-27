@@ -74,7 +74,16 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   }
 
   void _toolBarPanUpdate(DragUpdateDetails dragDetails) {
-    _toolBarY = dragDetails.globalPosition.dy - 40;
+    final mediaQuery = MediaQuery.of(context);
+    final minY = mediaQuery.padding.top;
+    final maxY =
+        (mediaQuery.size.height -
+                kToolbarHeight -
+                50.0 -
+                mediaQuery.padding.bottom)
+            .clamp(minY, mediaQuery.size.height);
+    final newY = (dragDetails.globalPosition.dy - 40).clamp(minY, maxY);
+    _toolBarY = newY.toDouble();
     setState(() {});
   }
 
