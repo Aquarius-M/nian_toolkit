@@ -44,6 +44,13 @@ class _RegularPluggableState extends State<RegularPluggable> {
   }
 
   @override
+  void dispose() {
+    regularEditingController?.dispose();
+    contentEditingController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,

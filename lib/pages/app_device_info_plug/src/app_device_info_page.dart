@@ -22,6 +22,13 @@ class _AppDeviceInfoPageState extends State<AppDeviceInfoPage>
   }
 
   @override
+  void dispose() {
+    tabController?.dispose();
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

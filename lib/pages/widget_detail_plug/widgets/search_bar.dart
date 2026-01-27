@@ -64,6 +64,7 @@ class _SearchInputState extends State<ToolSearchBar> {
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _inputController.dispose();
     super.dispose();
   }
