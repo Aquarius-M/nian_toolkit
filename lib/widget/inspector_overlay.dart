@@ -18,6 +18,7 @@ class InspectorOverlay extends LeafRenderObjectWidget {
   final bool needEdges;
 
   @override
+  // ignore: library_private_types_in_public_api
   _RenderInspectorOverlay createRenderObject(BuildContext context) {
     return _RenderInspectorOverlay(
       selection: selection,
@@ -29,6 +30,7 @@ class InspectorOverlay extends LeafRenderObjectWidget {
   @override
   void updateRenderObject(
     BuildContext context,
+    // ignore: library_private_types_in_public_api
     _RenderInspectorOverlay renderObject,
   ) {
     renderObject.selection = selection;

@@ -8,7 +8,7 @@ import 'custom_plug/custom_pluggable.dart';
 
 // import './custom_plug/custom_pluggable.dart';
 
-void main() async {
+void main() {
   // 设置透明状态栏
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
@@ -17,7 +17,11 @@ void main() async {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
 
-  ToolKit.run(const MyApp(), pluginsList: [CustomPluggable()]);
+  ToolKit.run(
+    const MyApp(),
+    pluginsList: [CustomPluggable()],
+    autoCollectLogs: false,
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -69,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _counter++;
     });
+    print(_counter.toString());
+    print(list[2]);
   }
 
   @override

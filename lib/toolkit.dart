@@ -64,6 +64,7 @@ part 'pages/pluggable.dart';
 
 part 'utils/kit_utils.dart';
 part 'utils/proxy_utils.dart';
+part 'utils/log_writer.dart';
 part 'utils/dio_inspector_interceptor.dart';
 part 'utils/route_history_observer.dart';
 
@@ -87,8 +88,18 @@ class ToolKit {
 
     /// 自定义插件列表
     final List<Pluggable>? pluginsList,
+
+    /// 是否自动收集日志
+    bool? autoCollectLogs,
   }) {
-    return runApp(_ToolKit(pluginsList: pluginsList, child: app));
+    autoCollectLogs ??= false;
+    if (autoCollectLogs) {
+      LogWriter.run(() {
+        runApp(_ToolKit(pluginsList: pluginsList, child: app));
+      });
+    } else {
+      runApp(_ToolKit(pluginsList: pluginsList, child: app));
+    }
   }
 
   static void show({bool isDarkMode = false}) {
