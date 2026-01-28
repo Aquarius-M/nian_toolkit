@@ -141,7 +141,7 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
       color: context.appColor.textPrimary,
     );
     Widget toolBar = Material(
-      color: context.appColor.backgroundPopup,
+      color: context.appColor.backgroundInput,
       elevation: 6,
       borderRadius: BorderRadius.circular(16),
       child: Padding(

@@ -68,7 +68,7 @@ class ToolkitMenu extends StatelessWidget {
                         child: ReorderableWrap(
                           spacing: 8.0,
                           runSpacing: 8.0,
-                          alignment: WrapAlignment.center,
+                          alignment: WrapAlignment.start,
                           onReorder: onReorder,
                           buildDraggableFeedback:
                               (context, constraints, child) {

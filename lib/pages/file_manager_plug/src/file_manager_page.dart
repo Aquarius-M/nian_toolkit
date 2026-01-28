@@ -205,15 +205,29 @@ class _FileManagerPageState extends State<FileManagerPage> {
                           isDirectory ? Icons.folder : Icons.insert_drive_file,
                           color: isDirectory ? Colors.blue : Colors.grey,
                         ),
-                        title: Text(name),
-                        subtitle: FutureBuilder<int>(
-                          future: _getFileSize(entity),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data! > 0) {
-                              return Text(_formatFileSize(snapshot.data!));
-                            }
-                            return const Text('');
-                          },
+                        title: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: context.f16MediumTextPrimary,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            FutureBuilder<int>(
+                              future: _getFileSize(entity),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data! > 0) {
+                                  return Text(
+                                    _formatFileSize(snapshot.data!),
+                                    style: context.f14RegularTextTertiary,
+                                  );
+                                }
+                                return SizedBox();
+                              },
+                            ),
+                          ],
                         ),
                         onTap: () {
                           if (isDirectory) {
