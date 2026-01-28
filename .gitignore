@@ -34,5 +34,3 @@ migrate_working_dir/
 
 # FVM Version Cache
 .fvm/
-
-!example/lib/common/global.dart
