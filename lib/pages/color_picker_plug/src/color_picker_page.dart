@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
 import 'package:nian_toolkit/toolkit.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 import '../../../app_theme/app_theme.dart';
 
@@ -40,7 +41,8 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     _magnifierSize = widget.size;
     _scale = widget.scale;
     _radius = BorderRadius.circular(_magnifierSize.longestSide);
-    _matrix = Matrix4.identity()..scale(widget.scale);
+    _matrix =
+        Matrix4.identity()..scaleByVector3(Vector3.all(widget.scale.toDouble()));
     _magnifierPosition =
         _windowSize.center(Offset.zero) - _magnifierSize.center(Offset.zero);
     super.initState();
@@ -54,7 +56,8 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     }
     if (oldWidget.scale != widget.scale) {
       _scale = widget.scale;
-      _matrix = Matrix4.identity()..scale(_scale);
+      _matrix = Matrix4.identity()
+        ..scaleByVector3(Vector3.all((_scale ?? 1.0).toDouble()));
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -64,10 +67,11 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
         dragDetails.globalPosition - _magnifierSize.center(Offset.zero);
     double newX = dragDetails.globalPosition.dx;
     double newY = dragDetails.globalPosition.dy;
+    final s = (_scale ?? 1.0).toDouble();
     final Matrix4 newMatrix = Matrix4.identity()
-      ..translate(newX, newY)
-      ..scale(_scale, _scale)
-      ..translate(-newX, -newY);
+      ..translateByVector3(Vector3(newX.toDouble(), newY.toDouble(), 0.0))
+      ..scaleByVector3(Vector3.all(s))
+      ..translateByVector3(Vector3(-newX.toDouble(), -newY.toDouble(), 0.0));
     _matrix = newMatrix;
     _searchPixel(dragDetails.globalPosition);
     setState(() {});

@@ -198,7 +198,6 @@ class __ToolKitState extends State<_ToolKit> with WidgetsBindingObserver {
           return;
         }
         _overlayEntry = OverlayEntry(
-          canSizeOverlay: true,
           builder: (_) =>
               Material(type: MaterialType.transparency, child: ToolKitWidget()),
         );

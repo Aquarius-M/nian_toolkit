@@ -7,12 +7,13 @@ class PluginIcons {
   static const defaultColor = Color(0xFFA4634D);
 
   static Widget _buildIcon(String assetPath, {Color? color}) {
+    final effectiveColor = color ?? defaultColor;
     return SvgPicture.asset(
       assetPath,
       package: 'nian_toolkit',
       width: iconSize,
       height: iconSize,
-      color: color ?? defaultColor,
+      colorFilter: ColorFilter.mode(effectiveColor, BlendMode.srcIn),
     );
   }
 

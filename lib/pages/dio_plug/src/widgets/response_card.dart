@@ -189,7 +189,7 @@ class ResponseCardState extends State<ResponseCard> {
   Widget _detailedContent(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: _isExpanded,
-      builder: (_, bool value, _) {
+      builder: (_, bool value, widget) {
         return AnimatedCrossFade(
           firstChild: const SizedBox(width: double.infinity),
           secondChild: Padding(

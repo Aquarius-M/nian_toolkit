@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nian_toolkit/toolkit.dart';
 
-import 'common/global.dart';
 import 'custom_plug/custom_pluggable.dart';
 
 // import './custom_plug/custom_pluggable.dart';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   // 设置透明状态栏
@@ -73,8 +73,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _counter++;
     });
-    print(_counter.toString());
-    print(list[2]);
+    debugPrint(_counter.toString());
+    debugPrint(list[2]);
   }
 
   @override
