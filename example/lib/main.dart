@@ -70,9 +70,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _counter++;
     });
-    // await NianToolKit.checkStatus(withChange: true);
-    log(list[1]);
-    ToolKit.hide();
   }
 
   @override

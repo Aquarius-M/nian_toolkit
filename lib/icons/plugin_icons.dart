@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PluginIcons {
   static const iconSize = 32.0;
 
-  static const defaultColor = Colors.orangeAccent;
+  static const defaultColor = Color(0xFFA4634D);
 
   static Widget _buildIcon(String assetPath, {Color? color}) {
     return SvgPicture.asset(
@@ -16,10 +16,9 @@ class PluginIcons {
     );
   }
 
-  static Widget get main => _buildIcon('assets/main.svg');
+  static Widget get main => _buildIcon('assets/ghost.svg');
 
-  static Widget get clear =>
-      _buildIcon('assets/clear.svg', color: Colors.redAccent);
+  static Widget get clear => _buildIcon('assets/clear.svg');
 
   static Widget get alignRuler => _buildIcon('assets/align_ruler.svg');
 

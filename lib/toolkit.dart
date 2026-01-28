@@ -245,18 +245,9 @@ class __ToolKitState extends State<_ToolKit> with WidgetsBindingObserver {
                   if (!focus.hasPrimaryFocus && focus.focusedChild != null) {
                     FocusManager.instance.primaryFocus!.unfocus();
                   }
+                  ToolkitStatusManager.instance.closeMenu();
                 },
-                child: GestureDetector(
-                  onTap: () {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-                    FocusScopeNode focus = FocusScope.of(context);
-                    if (!focus.hasPrimaryFocus && focus.focusedChild != null) {
-                      FocusManager.instance.primaryFocus!.unfocus();
-                    }
-                  },
-                  child: child,
-                ),
+                child: child,
               ),
             ),
           );

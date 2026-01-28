@@ -81,6 +81,10 @@ class _FileManagerPageState extends State<FileManagerPage> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        backgroundColor: context.appColor.backgroundPopup,
         title: const Text('确认删除'),
         content: Text('确定要删除 ${entity.path.split('/').last} 吗？'),
         actions: [
@@ -123,6 +127,10 @@ class _FileManagerPageState extends State<FileManagerPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: context.appColor.backgroundPopup,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         title: Text(entity.path.split('/').last),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -220,9 +228,10 @@ class _FileManagerPageState extends State<FileManagerPage> {
                             const PopupMenuItem(
                               value: 'info',
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(Icons.info_outline),
-                                  SizedBox(width: 8),
                                   Text('详情'),
                                 ],
                               ),
@@ -230,9 +239,10 @@ class _FileManagerPageState extends State<FileManagerPage> {
                             const PopupMenuItem(
                               value: 'delete',
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(Icons.delete, color: Colors.red),
-                                  SizedBox(width: 8),
                                   Text(
                                     '删除',
                                     style: TextStyle(color: Colors.red),

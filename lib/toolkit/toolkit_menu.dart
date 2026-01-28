@@ -108,7 +108,7 @@ class ToolkitMenu extends StatelessWidget {
                                               data.name
                                                   .substring(0, 1)
                                                   .toUpperCase(),
-                                              style: context.f16Bold.copyWith(
+                                              style: context.f32Bold.copyWith(
                                                 color: PluginIcons.defaultColor,
                                               ),
                                             ),

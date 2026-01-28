@@ -195,7 +195,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
         child: Container(
           width: MediaQuery.of(context).size.width - 32,
           decoration: BoxDecoration(
-            color: context.appColor.backgroundPopup,
+            color: context.appColor.backgroundInput,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               const BoxShadow(
