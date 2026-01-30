@@ -1,4 +1,5 @@
-part of '../toolkit.dart';
+import 'package:dio/dio.dart';
+import 'package:nian_toolkit/pages/dio_plug/src/instances.dart';
 
 /// Dio拦截器，用于监听和记录所有网络请求
 class DioInspectorInterceptor extends Interceptor {

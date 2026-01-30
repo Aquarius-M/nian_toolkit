@@ -1,4 +1,4 @@
-part of '../toolkit.dart';
+import 'package:flutter/material.dart';
 
 abstract class Pluggable {
   String get name;

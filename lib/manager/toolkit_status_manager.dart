@@ -12,7 +12,7 @@ class ToolkitStatusManager {
 
   final ValueNotifier<Offset> positionNotifier = ValueNotifier(Offset.zero);
   final ValueNotifier<bool> menuOpenNotifier = ValueNotifier(false);
-  final double ballSize = 50.0;
+  final Size ballSize = Size(50, 50);
   final double minX = 8.0;
 
   static const String _prefsKeyX = 'toolkit_ball_x';
@@ -20,11 +20,10 @@ class ToolkitStatusManager {
 
   double getMinY(BuildContext context) => MediaQuery.of(context).padding.top;
   double getMaxX(BuildContext context) =>
-      MediaQuery.of(context).size.width - ballSize - minX;
+      MediaQuery.of(context).size.width - ballSize.width - minX;
   double getMaxY(BuildContext context) =>
       MediaQuery.of(context).size.height -
-      ballSize -
-      50.0 -
+      ballSize.height -
       MediaQuery.of(context).padding.bottom;
 
   void resetPosition(BuildContext context) {

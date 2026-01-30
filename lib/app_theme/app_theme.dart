@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'app_color.dart';
+part of '../app_theme/theme.dart';
 
 extension ContextThemeExtension on BuildContext {
   AppColor get appColor {

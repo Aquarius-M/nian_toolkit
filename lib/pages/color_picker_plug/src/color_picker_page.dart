@@ -7,7 +7,7 @@ import 'package:image/image.dart' as img;
 import 'package:nian_toolkit/toolkit.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
-import '../../../app_theme/app_theme.dart';
+import '../../../app_theme/theme.dart';
 
 class ColorPickerPage extends StatefulWidget {
   final double scale;
@@ -42,8 +42,8 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
     _magnifierSize = widget.size;
     _scale = widget.scale;
     _radius = BorderRadius.circular(_magnifierSize.longestSide);
-    _matrix =
-        Matrix4.identity()..scaleByVector3(Vector3.all(widget.scale.toDouble()));
+    _matrix = Matrix4.identity()
+      ..scaleByVector3(Vector3.all(widget.scale.toDouble()));
     _magnifierPosition =
         _windowSize.center(Offset.zero) - _magnifierSize.center(Offset.zero);
     super.initState();
@@ -81,12 +81,11 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
   void _toolBarPanUpdate(DragUpdateDetails dragDetails) {
     final mediaQuery = MediaQuery.of(context);
     final minY = mediaQuery.padding.top;
-    final maxY =
-        (mediaQuery.size.height -
-                kToolbarHeight -
-                50.0 -
-                mediaQuery.padding.bottom)
-            .clamp(minY, mediaQuery.size.height);
+    final maxY = (mediaQuery.size.height -
+            kToolbarHeight -
+            50.0 -
+            mediaQuery.padding.bottom)
+        .clamp(minY, mediaQuery.size.height);
     final newY = (dragDetails.globalPosition.dy - 40).clamp(minY, maxY);
     _toolBarY = newY.toDouble();
     setState(() {});

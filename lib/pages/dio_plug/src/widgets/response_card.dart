@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
+
 import 'package:nian_toolkit/toolkit.dart';
+
+import '../../../../app_theme/theme.dart';
 
 class ResponseCard extends StatefulWidget {
   const ResponseCard({super.key, required this.response});
@@ -211,9 +212,8 @@ class ResponseCardState extends State<ResponseCard> {
               ],
             ),
           ),
-          crossFadeState: value
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+          crossFadeState:
+              value ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 200),
         );
       },
@@ -292,8 +292,7 @@ class _TagText extends StatelessWidget {
 }
 
 extension _DateTimeExtension on DateTime {
-  String hms([String separator = ':']) =>
-      '$hour$separator'
+  String hms([String separator = ':']) => '$hour$separator'
       '${'$minute'.padLeft(2, '0')}$separator'
       '${'$second'.padLeft(2, '0')}';
 }

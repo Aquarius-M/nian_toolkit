@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../app_theme/theme.dart';
 
 class AppColor {
   /// 固定色

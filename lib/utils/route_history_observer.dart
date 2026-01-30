@@ -1,4 +1,4 @@
-part of '../toolkit.dart';
+import 'package:flutter/material.dart';
 
 /// 路由历史观察器 - 全局单例
 class RouteHistoryObserver extends NavigatorObserver {

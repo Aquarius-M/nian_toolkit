@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../app_theme/app_theme_text_style.dart';
+
+import '../../../app_theme/theme.dart';
 import 'app_info_page.dart';
 import 'device_ingo_page.dart';
 

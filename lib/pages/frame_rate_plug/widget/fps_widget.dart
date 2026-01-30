@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart'
-    show TextStyleExt1;
 
+import '../../../app_theme/theme.dart';
 import 'fps_info.dart';
 import 'collection_util.dart';
 import 'fps_chart.dart';

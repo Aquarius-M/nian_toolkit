@@ -3,8 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../../app_theme/app_color.dart';
-import '../../../app_theme/app_theme.dart';
+import '../../../app_theme/theme.dart';
 import 'collection_util.dart';
 import 'fps_info.dart';
 import 'fps_widget.dart';
@@ -117,21 +116,21 @@ class _PerformanceObserverWidgetState extends State<PerformanceObserverWidget> {
                           ],
                         )
                       : fpsPageShowing
-                      ? const Row()
-                      : const Row(
-                          children: <Widget>[
-                            Text(
-                              '结束监听FPS',
-                              style: TextStyle(
-                                fontSize: 16,
-                                // color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontStyle: FontStyle.italic,
-                              ),
+                          ? const Row()
+                          : const Row(
+                              children: <Widget>[
+                                Text(
+                                  '结束监听FPS',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    // color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                                Icon(Icons.pause),
+                              ],
                             ),
-                            Icon(Icons.pause),
-                          ],
-                        ),
                 );
               },
             ),
@@ -148,10 +147,10 @@ class _PerformanceObserverWidgetState extends State<PerformanceObserverWidget> {
                     color: currentFps <= 18
                         ? Colors.green
                         : currentFps <= 33
-                        ? const Color(0xfffad337)
-                        : currentFps <= 66
-                        ? const Color(0xFFF48FB1)
-                        : const Color(0xFFD32F2F),
+                            ? const Color(0xfffad337)
+                            : currentFps <= 66
+                                ? const Color(0xFFF48FB1)
+                                : const Color(0xFFD32F2F),
                   ),
                 ),
               )

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
+
 import 'package:nian_toolkit/toolkit.dart';
+
+import '../../../app_theme/theme.dart';
 
 // ignore: must_be_immutable
 class PannelWidget extends StatelessWidget {

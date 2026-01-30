@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
 import 'package:nian_toolkit/toolkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../app_theme/theme.dart';
 
 class ProxyPage extends StatefulWidget {
   const ProxyPage({super.key});

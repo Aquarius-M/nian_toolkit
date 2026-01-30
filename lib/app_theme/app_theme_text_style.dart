@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'app_theme.dart';
+part of '../app_theme/theme.dart';
 
 extension TextStyleExt on BuildContext {
   /// 基本字体样式

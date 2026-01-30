@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
 import 'package:nian_toolkit/icons/plugin_icons.dart';
 import 'package:nian_toolkit/toolkit.dart';
+
+import '../app_theme/theme.dart';
 
 class ToolkitBall extends StatelessWidget {
   final bool hasActivePage;
@@ -52,11 +52,11 @@ class ToolkitBall extends StatelessWidget {
             },
             onTap: onTap,
             child: Container(
-              width: manager.ballSize,
-              height: manager.ballSize,
+              width: manager.ballSize.width,
+              height: manager.ballSize.height,
               decoration: BoxDecoration(
                 color: context.appColor.backgroundPopup,
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(blurRadius: 10, color: context.appColor.alwaysMask),
                 ],
@@ -78,8 +78,7 @@ class ToolkitBall extends StatelessWidget {
         }
         if (currentSelected != null) {
           return Center(
-            child:
-                currentSelected!.iconWidget() ??
+            child: currentSelected!.iconWidget() ??
                 Text(
                   currentSelected!.name.substring(0, 1).toUpperCase(),
                   style: context.f16Bold.copyWith(

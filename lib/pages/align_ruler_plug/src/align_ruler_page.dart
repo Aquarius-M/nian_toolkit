@@ -1,9 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
 
+import '../../../app_theme/theme.dart';
 import '../../../toolkit.dart';
 
 class AlignRulerPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class AlignRulerPage extends StatefulWidget {
 class _AlignRulerPageState extends State<AlignRulerPage> {
   Size _currentWindowSize =
       PlatformDispatcher.instance.views.first.physicalSize /
-      PlatformDispatcher.instance.views.first.devicePixelRatio;
+          PlatformDispatcher.instance.views.first.devicePixelRatio;
   final Size _dotSize = const Size(50, 50);
   Offset _dotPosition = Offset.zero;
   BorderRadius? _radius;
@@ -68,12 +67,12 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
         final double bottom = rect.bottom;
         final double dx =
             (_dotPosition.dx - left).abs() <= (_dotPosition.dx - right).abs()
-            ? left
-            : right;
+                ? left
+                : right;
         final double dy =
             (_dotPosition.dy - top).abs() <= (_dotPosition.dy - bottom).abs()
-            ? top
-            : bottom;
+                ? top
+                : bottom;
         offset = Offset(dx, dy);
         break;
       }
@@ -241,8 +240,7 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
             child: Text(_dotPosition.dy.toStringAsFixed(1), style: _fontStyle),
           ),
           Positioned(
-            left:
-                _dotPosition.dx +
+            left: _dotPosition.dx +
                 (_currentWindowSize.width - _dotPosition.dx) / 2 -
                 _textSize.width / 2,
             top: horizontalTop,
@@ -252,8 +250,7 @@ class _AlignRulerPageState extends State<AlignRulerPage> {
             ),
           ),
           Positioned(
-            top:
-                _dotPosition.dy +
+            top: _dotPosition.dy +
                 (_currentWindowSize.height - _dotPosition.dy) / 2 -
                 _textSize.height / 2,
             left: verticalLeft,

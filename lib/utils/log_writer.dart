@@ -1,4 +1,9 @@
-part of '../toolkit.dart';
+import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LogWriter {
   static final LogWriter _instance = LogWriter._internal();

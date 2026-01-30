@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Adjust project structure
+
 ## 0.0.2
 
 - Modify log output

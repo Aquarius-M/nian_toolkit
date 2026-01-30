@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nian_toolkit/app_theme/app_theme.dart';
-import 'package:nian_toolkit/app_theme/app_theme_text_style.dart';
+
 import 'package:reorderables/reorderables.dart';
+import '../app_theme/theme.dart';
 import '../icons/plugin_icons.dart';
 import '../toolkit.dart';
 
@@ -33,11 +33,12 @@ class ToolkitMenu extends StatelessWidget {
 
         final menuWidth = screenSize.width * 0.8;
         final menuHeight = screenSize.height * 0.2;
-        final menuLeft = (position.dx + manager.ballSize / 2 - menuWidth / 2)
-            .clamp(minX, screenSize.width - menuWidth - 8.0);
+        final menuLeft =
+            (position.dx + manager.ballSize.width / 2 - menuWidth / 2)
+                .clamp(minX, screenSize.width - menuWidth - 8.0);
 
         final topWhenAbove = position.dy - menuHeight - 8.0;
-        final topWhenBelow = position.dy + manager.ballSize + 8.0;
+        final topWhenBelow = position.dy + manager.ballSize.height + 8.0;
         final menuTop = (topWhenAbove < minY ? topWhenBelow : topWhenAbove)
             .clamp(minY, screenSize.height - menuHeight - 8.0);
 
@@ -71,12 +72,12 @@ class ToolkitMenu extends StatelessWidget {
                           onReorder: onReorder,
                           buildDraggableFeedback:
                               (context, constraints, child) {
-                                return Material(
-                                  color: Colors.transparent,
-                                  elevation: 0,
-                                  child: child,
-                                );
-                              },
+                            return Material(
+                              color: Colors.transparent,
+                              elevation: 0,
+                              child: child,
+                            );
+                          },
                           children: [
                             ...dataList.asMap().entries.map((entry) {
                               final data = entry.value;
@@ -101,8 +102,7 @@ class ToolkitMenu extends StatelessWidget {
                                         onPluginTap(data);
                                       },
                                       child: Center(
-                                        child:
-                                            data.iconWidget() ??
+                                        child: data.iconWidget() ??
                                             Text(
                                               data.name
                                                   .substring(0, 1)
