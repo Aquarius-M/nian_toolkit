@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
       _snapshot = img.decodeImage(pngBytes);
       image.dispose();
     } catch (e) {
-      debugPrint(e.toString());
+      log(e.toString());
     } finally {
       _excuting = false;
     }

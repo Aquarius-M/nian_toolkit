@@ -2,6 +2,7 @@ library;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
@@ -255,7 +256,7 @@ class __ToolKitState extends State<_ToolKit> with WidgetsBindingObserver {
                   if (!focus.hasPrimaryFocus && focus.focusedChild != null) {
                     FocusManager.instance.primaryFocus!.unfocus();
                   }
-                  ToolkitStatusManager.instance.closeMenu();
+                  // ToolkitStatusManager.instance.closeMenu();
                 },
                 child: child,
               ),

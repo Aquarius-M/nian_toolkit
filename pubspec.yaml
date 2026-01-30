@@ -1,6 +1,6 @@
 name: nian_toolkit
 description: In-app debugging toolkit with floating ball, inspectors, and utilities.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Aquarius-M/nian_toolkit
 repository: https://github.com/Aquarius-M/nian_toolkit
 issue_tracker: https://github.com/Aquarius-M/nian_toolkit/issues

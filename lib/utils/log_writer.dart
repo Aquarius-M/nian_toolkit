@@ -16,7 +16,7 @@ class LogWriter {
       },
       (error, stack) {
         final msg = 'Error: $error\nStack: $stack';
-        debugPrint(msg);
+        log(msg);
         LogWriter().write(msg);
       },
       zoneSpecification: ZoneSpecification(

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,8 +74,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _counter++;
     });
-    debugPrint(_counter.toString());
-    debugPrint(list[2]);
+    log(_counter.toString());
+    log(list[2]);
   }
 
   @override

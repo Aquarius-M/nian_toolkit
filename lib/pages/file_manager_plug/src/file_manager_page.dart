@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
       _currentPath = appDir.parent.path;
       await _loadDirectory(_currentPath);
     } catch (e) {
-      debugPrint('加载目录失败: $e');
+      log('加载目录失败: $e');
     }
     setState(() => _loading = false);
   }
@@ -52,7 +53,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
         _currentPath = path;
       });
     } catch (e) {
-      debugPrint('加载目录失败: $e');
+      log('加载目录失败: $e');
     }
     setState(() => _loading = false);
   }
