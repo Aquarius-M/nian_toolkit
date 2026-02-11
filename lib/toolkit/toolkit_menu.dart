@@ -67,7 +67,7 @@ class ToolkitMenu extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: ReorderableWrap(
-                          spacing: 10.0,
+                          spacing: 0.0,
                           runSpacing: 10.0,
                           onReorder: onReorder,
                           buildDraggableFeedback:
@@ -86,7 +86,7 @@ class ToolkitMenu extends StatelessWidget {
                               }
                               return SizedBox(
                                 key: ValueKey(data.name),
-                                width: 60,
+                                width: (menuWidth / 5) - 3,
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -124,7 +124,7 @@ class ToolkitMenu extends StatelessWidget {
                             }),
                             SizedBox(
                               key: const ValueKey("delete_cache"),
-                              width: 60,
+                              width: (menuWidth / 5) - 3,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.0.4
+
+- Fix menu style
 ## 0.0.3
 
 - Adjust project structure

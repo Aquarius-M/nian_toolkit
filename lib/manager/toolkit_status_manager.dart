@@ -24,7 +24,8 @@ class ToolkitStatusManager {
   double getMaxY(BuildContext context) =>
       MediaQuery.of(context).size.height -
       ballSize.height -
-      MediaQuery.of(context).padding.bottom;
+      MediaQuery.of(context).padding.bottom -
+      kBottomNavigationBarHeight;
 
   void resetPosition(BuildContext context) {
     _clearSavedPosition();

@@ -44,6 +44,8 @@ class ToolKitPluginManager {
     const RegularPluggable(),
     //9990 颜色选择器
     const ColorPickerPluggable(scale: 5, size: Size(70, 70)),
+
+    // const ColorPicker(),
     //9989 帧率
     const FrameRatePluggable(),
     //9988 对齐尺子

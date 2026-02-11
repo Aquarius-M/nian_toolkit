@@ -56,7 +56,7 @@ class ToolkitBall extends StatelessWidget {
               height: manager.ballSize.height,
               decoration: BoxDecoration(
                 color: context.appColor.backgroundPopup,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(manager.ballSize.width / 2),
                 boxShadow: [
                   BoxShadow(blurRadius: 10, color: context.appColor.alwaysMask),
                 ],

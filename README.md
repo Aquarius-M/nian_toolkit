@@ -20,7 +20,7 @@
 ## 环境要求
 
 - Flutter：建议使用 fvm（项目内包含 `.fvmrc`）
-- Dart SDK：见 [pubspec.yaml](file:///Users/nephkis/Desktop/%E8%87%AA%E5%BB%BA/matrix_chat/plugins/nian_toolkit/pubspec.yaml)
+- Dart SDK：见 pubspec.yaml
 - 平台：主要面向 iOS/Android（包含 `dart:io`、sqflite 等依赖，Web 不支持）
 
 ## 安装
