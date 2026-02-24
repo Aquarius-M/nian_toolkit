@@ -11,12 +11,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:nian_toolkit/pages/dio_plug/src/dio_page.dart';
-import 'package:nian_toolkit/utils/kit_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqlite_viewer2/sqlite_viewer.dart';
 
 import 'app_theme/theme.dart';
-import 'cyclop/cyclop.dart';
 import 'icons/plugin_icons.dart';
 
 import 'pages/color_picker_plug/src/color_picker_page.dart';
@@ -52,7 +50,6 @@ part 'pages/align_ruler_plug/align_ruler_pluggable.dart';
 part 'pages/app_device_info_plug/app_device_info_pluggable.dart';
 part 'pages/app_log_plug/app_log_pluggable.dart';
 part 'pages/color_picker_plug/color_picker_pluggable.dart';
-part 'pages/color_sucker_plug/color_sucker_pluggable.dart';
 part 'pages/database_plug/database_pluggable.dart';
 part 'pages/dio_plug/dio_pluggable.dart';
 part 'pages/file_manager_plug/file_manager_pluggable.dart';

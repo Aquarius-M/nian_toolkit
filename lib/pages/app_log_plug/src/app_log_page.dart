@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:path/path.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,7 +44,7 @@ class _LogListPageState extends State<LogListPage> {
           ? '$outPath/$path'
           : '$outPath/.${DateTime.now().toString().replaceAll(RegExp(r'(?<=\d\d-\d\d-\d\d)[\S|\s]+'), '')}.log',
     );
-    String fileName = basename(file.path);
+    String fileName = file.path.split('/').last;
     if (!await file.exists()) {
       await file.create(recursive: true);
     }

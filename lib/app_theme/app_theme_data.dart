@@ -7,7 +7,7 @@ class AppThemeData {
   static ThemeData dark(BuildContext context) => ThemeData(
     splashFactory: NoSplash.splashFactory,
     brightness: Brightness.dark,
-    fontFamily: 'Satoshi',
+    // fontFamily: 'Satoshi',
     focusColor: _darkColors.primary500,
     primaryColor: _darkColors.primary500,
     scaffoldBackgroundColor: _darkColors.backgroundPrimary,
