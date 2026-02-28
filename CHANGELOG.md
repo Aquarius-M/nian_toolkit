@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.6
+
+- fix icon
 ## 0.0.5
 
 - delete no use package

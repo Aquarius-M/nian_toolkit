@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -7,10 +8,26 @@ class PluginIcons {
 
   static const defaultColor = Color(0xFFA4634D);
 
+  static final Map<String, Uint8List> _bytesCache = {};
+  static final Map<String, MemoryImage> _providerCache = {};
+
+  static Uint8List _bytesFor(String base64) {
+    return _bytesCache.putIfAbsent(base64, () => base64Decode(base64));
+  }
+
+  static MemoryImage _providerFor(String base64) {
+    return _providerCache.putIfAbsent(base64, () => MemoryImage(_bytesFor(base64)));
+  }
+
   static Widget _buildIcon(String assetPath, {Color? color}) {
     final effectiveColor = color ?? defaultColor;
-    return Image.memory(base64Decode(assetPath),
-        width: iconSize, height: iconSize, color: effectiveColor);
+    return Image(
+      image: _providerFor(assetPath),
+      width: iconSize,
+      height: iconSize,
+      color: effectiveColor,
+      gaplessPlayback: true,
+    );
   }
 
   static Widget get main => _buildIcon(
