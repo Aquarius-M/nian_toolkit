@@ -15,9 +15,14 @@ class DioPage extends StatefulWidget {
 }
 
 class _DioPageState extends State<DioPage> {
+  bool showSearchBar = false;
+  late final TextEditingController _searchController;
+  String _query = '';
+
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController();
     // Bind listener to refresh requests.
     DioInspectorInstance.httpContainer.addListener(_listener);
   }
@@ -27,6 +32,7 @@ class _DioPageState extends State<DioPage> {
     DioInspectorInstance.httpContainer
       ..removeListener(_listener) // First, remove refresh listener.
       ..resetPaging(); // Then reset the paging field.
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -47,7 +53,7 @@ class _DioPageState extends State<DioPage> {
       child: Container(
         constraints: BoxConstraints.tightFor(
           width: double.maxFinite,
-          height: MediaQuery.of(context).size.height * 0.85,
+          height: MediaQuery.of(context).size.height * 0.75,
         ),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -70,7 +76,30 @@ class _DioPageState extends State<DioPage> {
                   Text('网络请求', style: context.f20BoldTextPrimary),
                   const Spacer(),
                   InkWell(
-                    onTap: DioInspectorInstance.httpContainer.clearRequests,
+                    onTap: () {
+                      setState(() {
+                        showSearchBar = !showSearchBar;
+                        if (showSearchBar == false) {
+                          _searchController.clear();
+                          _query = '';
+                        }
+                      });
+                    },
+                    child: Icon(
+                      Icons.search_rounded,
+                      color: context.appColor.textPrimary,
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  InkWell(
+                    onTap: () {
+                      //  DioInspectorInstance.httpContainer.clearRequests();
+                      _searchController.clear();
+                      setState(() {
+                        _query = '';
+                        showSearchBar = false;
+                      });
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         color: context.appColor.error.withValues(alpha: 0.1),
@@ -104,6 +133,45 @@ class _DioPageState extends State<DioPage> {
                 ],
               ),
             ),
+            if (showSearchBar)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _searchController,
+                  cursorHeight: 20,
+                  onChanged: (value) {
+                    setState(() {
+                      _query = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    isDense: true,
+                    labelText: "URL",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color:
+                            context.appColor.textPrimary.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    suffixIcon: _query != ""
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _searchController.clear();
+                                _query = '';
+                              });
+                            },
+                            icon: Icon(
+                              Icons.clear_rounded,
+                              color: context.appColor.textPrimary,
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ),
+            SizedBox(height: 8),
             Expanded(child: _itemList(context)),
           ],
         ),
@@ -111,9 +179,25 @@ class _DioPageState extends State<DioPage> {
     );
   }
 
+  List<Response<dynamic>> _filterRequests(List<Response<dynamic>> requests) {
+    final String query = _query.trim();
+    if (query.isEmpty) {
+      return requests;
+    }
+    final String lowerQuery = query.toLowerCase();
+    return requests.where((response) {
+      final String uri = response.requestOptions.uri.toString().toLowerCase();
+      return uri.contains(lowerQuery);
+    }).toList();
+  }
+
   Widget _itemList(BuildContext context) {
-    final List<Response<dynamic>> requests =
-        DioInspectorInstance.httpContainer.pagedRequests;
+    final bool hasQuery = _query.trim().isNotEmpty;
+    final List<Response<dynamic>> baseRequests = hasQuery
+        ? DioInspectorInstance.httpContainer.requests
+        : DioInspectorInstance.httpContainer.pagedRequests;
+    final List<Response<dynamic>> requests = _filterRequests(baseRequests);
+
     final int length = requests.length;
     if (length > 0) {
       return CustomScrollView(
@@ -121,7 +205,7 @@ class _DioPageState extends State<DioPage> {
           SliverList(
             delegate: SliverChildBuilderDelegate((_, int index) {
               final Response<dynamic> r = requests[index];
-              if (index == length - 2) {
+              if (!hasQuery && index == length - 2) {
                 DioInspectorInstance.httpContainer.loadNextPage();
               }
               return ResponseCard(
