@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.0.8
+
+- fix icon
 ## 0.0.7
 
 - dio add search
